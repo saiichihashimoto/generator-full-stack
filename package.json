@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "run-s build:*",
-    "build:babel": "rm -rf generators && cp -r src/ generators/ && babel src --out-dir generators",
+    "build:generators": "rm -rf generators && cp -v -r src/ generators/ && babel src --out-dir generators ",
     "check": "run-s check:*",
     "check:css": "stylelint \"**/*.css\" --color --ignore-path .gitignore",
     "check:js": "eslint . --color --ignore-path .gitignore",
@@ -25,20 +25,7 @@
     "fixall:js": "( find . -name \\*.js | grep -v node_modules | xargs -n 1 eslint --fix --color )",
     "fixall:json": "( find . -name \\*.json | grep -v node_modules | xargs -n 1 jsonlint --in-place )",
     "fixall:package_json": "sort-package-json",
-    "start": "watch 'npm run build:babel' src"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    },
-    "ghooks": {
-      "pre-commit": "npm run fix && npm run check",
-      "commit-msg": "validate-commit-msg",
-      "pre-push": "npm run check"
-    },
-    "validate-commit-msg": {
-      "helpMessage": "Install commitizen and use `git cz` instead of `git commit` https://github.com/commitizen/cz-cli#installing-the-command-line-tool"
-    }
+    "start": "watch 'npm run build:generators' src"
   },
   "dependencies": {
     "yeoman-generator": "^0.24.1"
