@@ -2,7 +2,7 @@
   "name": "<%= name %>",
   "description": "<%= description %>",
   "engines": {
-    "node": "^<%= node %>",
-    "npm": "^<%= npm %>"
+    "node": "^6.1.0",
+    "npm": "^3.9.0"
   }
 }
