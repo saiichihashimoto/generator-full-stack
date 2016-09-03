@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "run-s build:*",
-    "build:generators": "rm -rf generators && cp -v -r src/ generators/ && babel src --out-dir generators --source-maps --ignore templates/*",
+    "build:generators": "rm -rf generators && cp -v -r src generators/ && babel src --out-dir generators --source-maps --ignore templates/*",
     "check": "run-s check:*",
     "check:css": "stylelint \"**/*.css\" --color --ignore-path .gitignore",
     "check:js": "eslint . --color --ignore-path .gitignore",
