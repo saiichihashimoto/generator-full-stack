@@ -16,7 +16,9 @@ export default class PackageGenerator extends Base {
 				name:    'description',
 				type:    'input',
 			},
-		]).then((answers) => this.answers = answers);
+		]).then((answers) => {
+			this.answers = answers;
+		});
 	}
 	configuring() {
 		this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), this.answers);

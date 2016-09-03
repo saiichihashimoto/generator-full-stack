@@ -27,6 +27,12 @@
     "fixall:package_json": "sort-package-json",
     "start": "watch 'npm run build:generators' src"
   },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run fix && npm run check",
+      "pre-push": "npm run check"
+    }
+  },
   "dependencies": {
     "yeoman-generator": "^0.24.1"
   },
@@ -36,7 +42,6 @@
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-class-properties": "^6.11.5",
     "babel-preset-es2015": "^6.13.2",
-    "cz-conventional-changelog": "^1.2.0",
     "eslint": "^3.3.0",
     "eslint-config-xo": "^0.15.3",
     "eslint-plugin-babel": "^3.3.0",
@@ -47,7 +52,6 @@
     "stylefmt": "^4.2.3",
     "stylelint": "^7.1.0",
     "stylelint-config-standard": "^12.0.0",
-    "validate-commit-msg": "^2.8.0",
     "watch": "^0.19.2"
   },
   "engines": {
