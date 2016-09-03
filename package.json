@@ -13,11 +13,14 @@
     "build:generators": "rm -rf generators && cp -v -r src/ generators/ && babel src --out-dir generators --source-maps --ignore templates/*",
     "check": "run-s check:*",
     "check:js": "eslint . --color --ignore-path .gitignore",
+    "check:json": "find . -name \\*.json | grep -v node_modules | xargs -n 1 jsonlint --quiet",
     "fix": "run-s fix:*",
     "fix:js": "( git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.js$\" | xargs -n 1 eslint --fix --color ) && ( git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.js$\" | xargs -n 1 git add )",
+    "fix:json": "( git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.json$\" | xargs -n 1 jsonlint --in-place ) && ( git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.json$\" | xargs -n 1 git add )",
     "fix:package_json": "sort-package-json && git add package.json",
     "fixall": "run-s fixall:*",
     "fixall:js": "( find . -name \\*.js | grep -v node_modules | grep -v generators | xargs -n 1 eslint --fix --color )",
+    "fixall:json": "( find . -name \\*.json | grep -v node_modules | xargs -n 1 jsonlint --in-place )",
     "fixall:package_json": "sort-package-json",
     "start": "watch 'npm run build:generators' src"
   },
@@ -40,6 +43,7 @@
     "eslint-config-xo": "^0.15.3",
     "eslint-plugin-babel": "^3.3.0",
     "ghooks": "^1.3.2",
+    "jsonlint": "^1.6.2",
     "npm-run-all": "^3.0.0",
     "sort-package-json": "^1.4.0",
     "watch": "^0.19.2"
