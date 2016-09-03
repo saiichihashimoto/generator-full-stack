@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "run-s build:*",
-    "build:babel": "rm -rf generators && babel src/generators --out-dir generators",
+    "build:babel": "rm -rf generators && cp -r src/ generators/ && babel src --out-dir generators",
     "check": "run-s check:*",
     "check:css": "stylelint \"**/*.css\" --color --ignore-path .gitignore",
     "check:js": "eslint . --color --ignore-path .gitignore",
@@ -25,7 +25,7 @@
     "fixall:js": "( find . -name \\*.js | grep -v node_modules | xargs -n 1 eslint --fix --color )",
     "fixall:json": "( find . -name \\*.json | grep -v node_modules | xargs -n 1 jsonlint --in-place )",
     "fixall:package_json": "sort-package-json",
-    "start": "babel src/generators --out-dir generators --watch"
+    "start": "watch 'npm run build:babel' src"
   },
   "config": {
     "commitizen": {
@@ -60,7 +60,8 @@
     "stylefmt": "^4.2.3",
     "stylelint": "^7.1.0",
     "stylelint-config-standard": "^12.0.0",
-    "validate-commit-msg": "^2.8.0"
+    "validate-commit-msg": "^2.8.0",
+    "watch": "^0.19.2"
   },
   "engines": {
     "node": "^6.1.0",
