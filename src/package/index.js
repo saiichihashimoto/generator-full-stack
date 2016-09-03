@@ -30,8 +30,7 @@ export default class PackageGenerator extends Base {
 			},
 		]).then((answers) => this.answers = answers);
 	}
-	writing() {
-		// QUESTION Does this go here or in configuring?
+	configuring() {
 		this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), this.answers);
 	}
 }
