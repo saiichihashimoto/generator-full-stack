@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "run-s build:*",
-    "build:generators": "rm -rf generators && cp -v -r src/ generators/ && babel src --out-dir generators ",
+    "build:generators": "rm -rf generators && cp -v -r src/ generators/ && babel src --out-dir generators --ignore templates/*",
     "check": "run-s check:*",
     "check:js": "eslint . --color --ignore-path .gitignore",
     "fix": "run-s fix:*",
