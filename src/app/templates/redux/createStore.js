@@ -8,13 +8,11 @@ if (global.window && global.window.devToolsExtension) {
 }
 createMyStore = applyMiddleware(thunkMiddlware)(createMyStore);
 
-const reducers = {
-	entities: require('./entities.reducer').default,
-};
-
 export default function(initialState) {
 	return createMyStore(
-		combineReducers(reducers),
+		combineReducers({
+			entities: require('./entities.reducer').default,
+		}),
 		initialState
 	);
 }
