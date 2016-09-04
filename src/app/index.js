@@ -5,7 +5,6 @@ export default class AppGenerator extends Base {
 		this.argument('name', { type: String, required: true });
 	}
 	writing() {
-		// FIXME What goes in configuring/writing?
 		this.fs.copy(this.templatePath('.babelrc'), this.destinationPath('.babelrc'));
 		this.fs.copy(this.templatePath('../../../.editorconfig'), this.destinationPath('.editorconfig'));
 		this.fs.copy(this.templatePath('../../../.eslintrc'), this.destinationPath('.eslintrc'));
