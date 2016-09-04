@@ -54,6 +54,8 @@ export default class AppGenerator extends Base {
 				'lodash.property',
 				'lodash.wrap',
 				'normalizr',
+				'raven',
+				'raven-js',
 				'react',
 				'react-dom',
 				'react-redux',
@@ -62,8 +64,6 @@ export default class AppGenerator extends Base {
 				'redux-actions',
 				'redux-thunk',
 				'reselect',
-				'rollbar',
-				'rollbar-browser',
 			],
 			{ save: true }
 		);

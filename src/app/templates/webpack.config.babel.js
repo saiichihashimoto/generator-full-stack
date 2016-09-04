@@ -61,6 +61,8 @@ export default {
 	plugins: compact([
 		new webpack.EnvironmentPlugin([
 			'NODE_ENV',
+			'SENTRY_DSN_CLIENT',
+			'npm_package_gitHead',
 		]),
 		new BellOnBundlerErrorPlugin(),
 		!process.env.NODE_ENV && new require('webpack-dotenv-plugin')(),
