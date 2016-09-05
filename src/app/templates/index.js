@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import compression from 'compression';
+import cors from 'cors';
 import feathers from 'feathers';
 import helmet from 'helmet';
 import raven from 'raven';
@@ -11,13 +12,14 @@ import report from './report';
 const PORT = process.env.PORT || 5100;
 
 feathers()
+	.use(cors({ origin: !process.env.NODE_ENV && 'http://localhost:5000' }))
 	.use(helmet())
 	.use(compression())
 	.use(bodyParser.json())
 	.use(bodyParser.urlencoded({ extended: true }))
 	.use(raven.middleware.express.requestHandler(report))
 
-	.use('/v1', api)
+	.use('/api/v1', api)
 
 	.all('*', (req, res, next) => next(new NotFound('Path not found', { path: req.path })))
 

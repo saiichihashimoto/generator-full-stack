@@ -14,7 +14,7 @@ export default class AppGenerator extends Base {
 		this.fs.copy(this.templatePath('Procfile'), this.destinationPath('Procfile'));
 		this.fs.copy(this.templatePath('Procfile.dev'), this.destinationPath('Procfile.dev'));
 		this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
-		// TODO this.fs.copy(this.templatePath('api/index.web.js'), this.destinationPath('api/index.web.js'));
+		this.fs.copy(this.templatePath('api/index.web.js'), this.destinationPath('api/index.web.js'));
 		this.fs.copy(this.templatePath('assets/images/logo.png'), this.destinationPath('assets/images/logo.png'));
 		this.fs.copy(this.templatePath('components/App/App.styles.web.css'), this.destinationPath('components/App/App.styles.web.css'));
 		this.fs.copy(this.templatePath('components/App/App.web.js'), this.destinationPath('components/App/App.web.js'));
@@ -22,8 +22,8 @@ export default class AppGenerator extends Base {
 		this.fs.copy(this.templatePath('components/Foo/Foo.web.js'), this.destinationPath('components/Foo/Foo.web.js'));
 		this.fs.copy(this.templatePath('components/global.styles.web.css'), this.destinationPath('components/global.styles.web.css'));
 		this.fs.copy(this.templatePath('components/routes.web.js'), this.destinationPath('components/routes.web.js'));
-		this.fs.copy(this.templatePath('entities/foo/schema.normalizr.js'), this.destinationPath('entities/foo/schema.normalizr.js'));
-		this.fs.copy(this.templatePath('entities/foo/service.js'), this.destinationPath('entities/foo/service.js'));
+		this.fs.copy(this.templatePath('entities/foos/schema.normalizr.js'), this.destinationPath('entities/foos/schema.normalizr.js'));
+		this.fs.copy(this.templatePath('entities/foos/service.js'), this.destinationPath('entities/foos/service.js'));
 		this.fs.copy(this.templatePath('entities/schemas.normalizr.js'), this.destinationPath('entities/schemas.normalizr.js'));
 		this.fs.copy(this.templatePath('index.js'), this.destinationPath('index.js'));
 		this.fs.copy(this.templatePath('index.web.js'), this.destinationPath('index.web.js'));
@@ -49,15 +49,18 @@ export default class AppGenerator extends Base {
 				'body-parser',
 				'classnames',
 				'compression',
+				'cors',
 				'feathers',
 				'feathers-errors',
 				'feathers-memory',
 				'feathers-rest',
 				'helmet',
+				'lodash.isarray',
 				'lodash.mapvalues',
 				'lodash.property',
 				'lodash.wrap',
 				'normalizr',
+				'pluralize',
 				'raven',
 				'raven-js',
 				'react',
