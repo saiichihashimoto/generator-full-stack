@@ -41,6 +41,7 @@ export default {
 			'.json', '.js', '.css',
 		],
 	},
+	bail:      process.env.NODE_ENV,
 	devtool:   'cheap-module-source-map',
 	devServer: {
 		port:               process.env.PORT,
