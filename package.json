@@ -14,7 +14,7 @@
   "scripts": {
     "build": "npm run clean && run-s build:*",
     "build:generators": "babel src --out-dir generators --source-maps --ignore templates/*",
-    "build:templates": "rsync src generators/ --include=/ --include=*/ --include=templates/* --exclude=* --recursive --verbose",
+    "build:templates": "rsync src/ generators/ --include=/ --include=*/ --include=templates/* --exclude=* --recursive --verbose",
     "check": "run-s check:*",
     "check:css": "stylelint \"**/*.css\" --color --ignore-path .gitignore",
     "check:js": "eslint . --color --ignore-path .gitignore",
