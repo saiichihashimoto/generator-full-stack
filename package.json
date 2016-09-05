@@ -12,12 +12,14 @@
     "url": "git+https://github.com/saiichihashimoto/generator-full-stack.git"
   },
   "scripts": {
-    "build": "run-s build:*",
-    "build:generators": "rm -rf generators && cp -v -r src generators/ && babel src --out-dir generators --source-maps --ignore templates/*",
+    "build": "npm run clean && run-s build:*",
+    "build:generators": "babel src --out-dir generators --source-maps --ignore templates/*",
+    "build:templates": "rsync src generators/ --include=/ --include=*/ --include=templates/* --exclude=* --recursive --verbose",
     "check": "run-s check:*",
     "check:css": "stylelint \"**/*.css\" --color --ignore-path .gitignore",
     "check:js": "eslint . --color --ignore-path .gitignore",
     "check:json": "find . -name \\*.json | grep -v node_modules | xargs -n 1 jsonlint --quiet",
+    "clean": "rm -rf generators",
     "deploy": "npm publish",
     "format": "run-s format:*",
     "format:css": "( git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.css$\" | xargs -n 1 stylefmt --config .stylelintrc ) && ( git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.css$\" | xargs -n 1 git add )",
@@ -30,7 +32,7 @@
     "formatall:json": "( find . -name \\*.json | grep -v node_modules | xargs -n 1 jsonlint --in-place )",
     "formatall:package_json": "sort-package-json",
     "release": "semantic-release pre && npm run build && npm run deploy && semantic-release post",
-    "start": "watch 'npm run build:generators' src",
+    "start": "foreman start",
     "test": "echo no tests"
   },
   "config": {
@@ -56,6 +58,7 @@
     "babel-plugin-transform-class-properties": "^6.11.5",
     "babel-preset-es2015": "^6.13.2",
     "babel-preset-react": "^6.11.1",
+    "cpx": "^1.5.0",
     "cz-conventional-changelog": "^1.2.0",
     "eslint": "^3.3.0",
     "eslint-config-xo": "^0.15.3",
@@ -69,8 +72,7 @@
     "stylefmt": "^4.2.3",
     "stylelint": "^7.2.0",
     "stylelint-config-standard": "^13.0.0",
-    "validate-commit-msg": "^2.8.0",
-    "watch": "^0.19.2"
+    "validate-commit-msg": "^2.8.0"
   },
   "engines": {
     "node": "^6.1.0",
