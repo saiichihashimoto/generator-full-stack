@@ -1,8 +1,6 @@
 const requireContext = require.context('.', true, /schema\.normalizr$/);
 
-const schemas = requireContext.keys().reduce(
-	(memo, filename) => Object.assign(memo, { [filename.match(/\.\/(.*)\/.*/)[1]]: requireContext(filename).default }),
+export default requireContext.keys().reduce(
+	(memo, filename) => Object.assign(memo, { [filename.match(/\.\/(.*)\/schema\.normalizr/)[1]]: requireContext(filename).default }),
 	{}
 );
-
-export default schemas;
