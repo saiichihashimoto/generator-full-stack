@@ -1,3 +1,14 @@
+// TODO https://github.com/saiichihashimoto/generator-full-stack/issues/4
+//
+// import 'css-modules-require-hook/preset';
+// import reactRouterToArray from 'react-router-to-array';
+//
+// import routes from './components/routes';
+//
+// reactRouterToArray(routes).map((route) => new HtmlWebpackPlugin({
+// 	filename: (route + '/index.html').replace(/\/+/, ''),
+// }))
+
 import BellOnBundlerErrorPlugin from 'bell-on-bundler-error-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';

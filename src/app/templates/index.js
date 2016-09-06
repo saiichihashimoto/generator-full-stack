@@ -1,3 +1,6 @@
+// TODO https://github.com/saiichihashimoto/generator-full-stack/issues/4
+// import 'css-modules-require-hook/preset';
+
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import cors from 'cors';
@@ -20,6 +23,8 @@ feathers()
 	.use(raven.middleware.express.requestHandler(report))
 
 	.use('/api/v1', api)
+
+	// TODO https://github.com/saiichihashimoto/generator-full-stack/issues/4
 
 	.all('*', (req, res, next) => next(new NotFound('Path not found', { path: req.path })))
 

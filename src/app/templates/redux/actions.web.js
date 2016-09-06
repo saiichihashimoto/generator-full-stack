@@ -1,3 +1,3 @@
 const requireContext = require.context('.', false, /^\.\/.+\.actions$/);
 
-export default Object.assign.apply(this, [{}].concat(requireContext.keys().map(requireContext)));
+export default requireContext.keys().reduce((memo, filename) => Object.assign(memo, requireContext(filename)), {});

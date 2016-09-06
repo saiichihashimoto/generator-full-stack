@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import property from 'lodash.property';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -8,7 +7,7 @@ import styles from './App.styles';
 
 export default connect(
 	createStructuredSelector({
-		foos: property('entities.foos'),
+		foos: (state) => state.entities.foos,
 	}),
 	actions
 )(class App extends Component {
