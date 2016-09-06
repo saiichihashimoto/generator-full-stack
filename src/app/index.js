@@ -16,12 +16,12 @@ export default class AppGenerator extends Base {
 		this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
 		this.fs.copy(this.templatePath('api/index.web.js'), this.destinationPath('api/index.web.js'));
 		this.fs.copy(this.templatePath('assets/images/logo.png'), this.destinationPath('assets/images/logo.png'));
-		this.fs.copy(this.templatePath('components/App/App.styles.web.css'), this.destinationPath('components/App/App.styles.web.css'));
-		this.fs.copy(this.templatePath('components/App/App.web.js'), this.destinationPath('components/App/App.web.js'));
-		this.fs.copy(this.templatePath('components/Foo/Foo.styles.web.css'), this.destinationPath('components/Foo/Foo.styles.web.css'));
-		this.fs.copy(this.templatePath('components/Foo/Foo.web.js'), this.destinationPath('components/Foo/Foo.web.js'));
-		this.fs.copy(this.templatePath('components/global.styles.web.css'), this.destinationPath('components/global.styles.web.css'));
-		this.fs.copy(this.templatePath('components/routes.web.js'), this.destinationPath('components/routes.web.js'));
+		this.fs.copy(this.templatePath('components/App/App.styles.css'), this.destinationPath('components/App/App.styles.css'));
+		this.fs.copy(this.templatePath('components/App/App.js'), this.destinationPath('components/App/App.js'));
+		this.fs.copy(this.templatePath('components/Foo/Foo.styles.css'), this.destinationPath('components/Foo/Foo.styles.css'));
+		this.fs.copy(this.templatePath('components/Foo/Foo.js'), this.destinationPath('components/Foo/Foo.js'));
+		this.fs.copy(this.templatePath('components/global.styles.css'), this.destinationPath('components/global.styles.css'));
+		this.fs.copy(this.templatePath('components/routes.js'), this.destinationPath('components/routes.js'));
 		this.fs.copy(this.templatePath('entities/foos/schema.normalizr.js'), this.destinationPath('entities/foos/schema.normalizr.js'));
 		this.fs.copy(this.templatePath('entities/foos/service.js'), this.destinationPath('entities/foos/service.js'));
 		this.fs.copy(this.templatePath('entities/schemas.normalizr.js'), this.destinationPath('entities/schemas.normalizr.js'));
