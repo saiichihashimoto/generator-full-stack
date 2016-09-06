@@ -1,7 +1,8 @@
 {
   "name": "<%= name %>",
   "scripts": {
-    "build": "rm -rf dist && run-s build:*",
+    "prebuild": "npm run clean",
+    "build": "run-s build:*",
     "build:web": "NODE_ENV=production webpack -p",
     "check": "run-s check:*",
     "check:css": "stylelint \"**/*.css\" --color --ignore-path .gitignore",
@@ -21,8 +22,8 @@
     "formatall:js": "( find . -name \\*.js | grep -v node_modules | xargs -n 1 eslint --fix --color )",
     "formatall:json": "( find . -name \\*.json | grep -v node_modules | xargs -n 1 jsonlint --in-place )",
     "formatall:package_json": "sort-package-json",
-    "prerelease": "semantic-release pre",
-    "release": "npm run build && run-s release:*",
+    "prerelease": "semantic-release pre && npm run build",
+    "release": "run-s release:*",
     "postrelease": "semantic-release post",
     "start": "if [ \"$NODE_ENV\" = 'production' ]; then foreman start; else foreman start -f Procfile.dev; fi",
     "test": "run-s test:*",
