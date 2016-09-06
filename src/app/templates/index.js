@@ -1,4 +1,4 @@
-// TODO https://github.com/saiichihashimoto/generator-full-stack/issues/4
+// TODO https://github.com/saiichihashimoto/generator-full-stack/issues/5
 // import 'css-modules-require-hook/preset';
 
 import bodyParser from 'body-parser';
@@ -24,7 +24,7 @@ feathers()
 
 	.use('/api/v1', api)
 
-	// TODO https://github.com/saiichihashimoto/generator-full-stack/issues/4
+	// TODO https://github.com/saiichihashimoto/generator-full-stack/issues/5
 
 	.all('*', (req, res, next) => next(new NotFound('Path not found', { path: req.path })))
 
