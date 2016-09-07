@@ -1,3 +1,5 @@
+# Put javascript in here as well. eslint isn't enough
+
 root = true
 
 [*]

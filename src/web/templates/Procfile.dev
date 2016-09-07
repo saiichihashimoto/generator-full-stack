@@ -1,0 +1,4 @@
+www: webpack-dev-server --inline --hot --host 0.0.0.0
+<%_ if (dynamic) { _%>
+web: nodemon --exec babel-node --ignore dist/ -- index
+<%_ } _%>

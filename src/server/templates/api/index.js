@@ -1,7 +1,7 @@
 import feathers from 'feathers';
 import rest from 'feathers-rest';
 
-// TODO Register services manually
+// TODO replace with require-all
 import foosService from '../entities/foos/service';
 
 export default feathers()

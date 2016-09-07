@@ -29,7 +29,7 @@ export default {
 	},
 	output: {
 		path:       'dist/web',
-		filename:   '[name].[hash].js',
+		filename:   'js/[name].[hash].js',
 		publicPath: '/',
 	},
 	module: {
@@ -74,18 +74,18 @@ export default {
 		new webpack.EnvironmentPlugin([
 			'NODE_ENV',
 			'SENTRY_DSN_CLIENT',
-			'npm_package_gitHead',
+			'npm_package_version',
 		]),
 		new BellOnBundlerErrorPlugin(),
 		!process.env.NODE_ENV && new require('webpack-dotenv-plugin')(),
-		process.env.NODE_ENV && new ExtractTextPlugin('[name].[hash].css'),
-		new FaviconsWebpackPlugin({ logo: './assets/images/logo.png', title: '<%= name %>', prefix: 'favicons-[hash]/' }),
+		process.env.NODE_ENV && new ExtractTextPlugin('css/[name].[hash].css'),
+		new FaviconsWebpackPlugin({ logo: './assets/images/logo.png', title: process.env.npm_package_name, prefix: 'favicons-[hash]/' }),
 		new HtmlWebpackPlugin({
 			googleAnalytics: process.env.GOOGLE_ANALYTICS_ID && {
 				trackingId:     process.env.GOOGLE_ANALYTICS_ID,
 				pageViewOnLoad: true,
 			},
-			title:      '<%= name %>',
+			title:      process.env.npm_package_name,
 			inject:     false,
 			template:   require('html-webpack-template'),
 			appMountId: 'mount',

@@ -53,6 +53,7 @@
     }
   },
   "dependencies": {
+    "lodash.compact": "^3.0.1",
     "yeoman-generator": "^0.24.1"
   },
   "devDependencies": {
