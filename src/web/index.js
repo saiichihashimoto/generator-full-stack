@@ -42,7 +42,7 @@ export default class WebGenerator extends Base {
 		this.fs.copy(this.templatePath('redux/entities.reducer.js'), this.destinationPath('redux/entities.reducer.js'));
 		this.fs.copy(this.templatePath('report/index.web.js'), this.destinationPath('report/index.web.js'));
 		this.fs.copy(this.templatePath('webpack.config.babel.js'), this.destinationPath('webpack.config.babel.js'));
-		this.fs.copyTpl(this.templatePath('Procfile.dev'), this.destinationPath('Procfile.dev'), Object.assign({}, this, this.options));
+		this.fs.copyTpl(this.templatePath('Procfile.dev.ejs'), this.destinationPath('Procfile.dev'), Object.assign({}, this, this.options));
 		this.fs.write(this.destinationPath('.env.default'), '');
 
 		if (this.options.dynamic) {

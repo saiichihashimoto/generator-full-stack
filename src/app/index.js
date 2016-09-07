@@ -39,7 +39,7 @@ export default class AppGenerator extends Base {
 		this.fs.copy(this.templatePath('.babelrc'), this.destinationPath('.babelrc'));
 		this.fs.copy(this.templatePath('.travis.yml'), this.destinationPath('.travis.yml'));
 		this.fs.copy(this.templatePath('assets/images/logo.png'), this.destinationPath('assets/images/logo.png'));
-		this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), Object.assign({}, this, this.options));
+		this.fs.copyTpl(this.templatePath('package.json.ejs'), this.destinationPath('package.json'), Object.assign({}, this, this.options));
 		this.fs.write(this.destinationPath('.env'), '');
 	}
 	installing() {
