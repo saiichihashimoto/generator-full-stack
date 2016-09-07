@@ -33,15 +33,13 @@ export default class WebGenerator extends Base {
 
 		switch (this.options.renderOn) {
 			case 'build':
+			case 'mount':
 				this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
 				this.fs.copy(this.templatePath('web/index.web.ejs'), this.destinationPath('web/index.ejs'));
 				break;
 			case 'serve':
 				this.fs.copy(this.templatePath('web/index.ejs'), this.destinationPath('web/index.ejs'));
 				this.fs.copy(this.templatePath('web/render.middleware.js'), this.destinationPath('web/render.middleware.js'));
-				break;
-			case 'mount':
-				this.fs.copy(this.templatePath('web/index.web.ejs'), this.destinationPath('web/index.ejs'));
 				break;
 			default:
 				break;
@@ -51,6 +49,7 @@ export default class WebGenerator extends Base {
 		let whereToSave;
 		switch (this.options.renderOn) {
 			case 'build':
+			case 'mount':
 				whereToSave = { saveDev: true };
 				break;
 			case 'serve':
@@ -119,7 +118,7 @@ export default class WebGenerator extends Base {
 				'feathers-rest',
 				'raven-js',
 				'react-hot-loader@1.3.0',
-				(this.options.renderOn === 'build') && 'react-router-to-array',
+				(this.options.renderOn === 'build' || this.options.renderOn === 'mount') && 'react-router-to-array',
 				'stylefmt',
 				'stylelint',
 				'stylelint-config-standard',

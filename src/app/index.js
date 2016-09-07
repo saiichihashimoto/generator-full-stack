@@ -1,3 +1,4 @@
+import compact from 'lodash.compact';
 import { Base } from 'yeoman-generator';
 
 export default class AppGenerator extends Base {
@@ -19,7 +20,7 @@ export default class AppGenerator extends Base {
 						{ name: 'Server', value: 'server' },
 					],
 				}])
-					.then((answers) => Object.assign(this.options, answers));
+				.then((answers) => Object.assign(this.options, answers));
 			})
 			.then(() => {
 				if (!this.options.platforms.includes('web')) {
@@ -28,14 +29,14 @@ export default class AppGenerator extends Base {
 				return this.prompt([!this.options.renderOn && {
 					message: 'Render on',
 					name:    'renderOn',
-					type:    'expand',
-					choices: [
+					type:    'list',
+					choices: compact([
 						{ name: 'Build', value: 'build' },
-						{ name: 'Serve', value: 'serve' },
+						this.options.platforms.includes('server') && { name: 'Serve', value: 'serve' },
 						{ name: 'Mount', value: 'mount' },
-					],
+					]),
 				}])
-					.then((answers) => Object.assign(this.options, answers));
+				.then((answers) => Object.assign(this.options, answers));
 			})
 			.then(() => {
 				if (this.options.platforms.includes('server')) {
