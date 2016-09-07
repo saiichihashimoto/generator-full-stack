@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<!--[if lt IE 7 ]> <html lang="en" class="ie6" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %>> <![endif]-->
-<!--[if IE 7 ]>    <html lang="en" class="ie7" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %>> <![endif]-->
-<!--[if IE 8 ]>    <html lang="en" class="ie8" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %>> <![endif]-->
-<!--[if IE 9 ]>    <html lang="en" class="ie9" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %>> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %>> <!--<![endif]-->
+<!--[if lt IE 7 ]> <html lang="en" class="ie6" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <%- htmlWebpackPlugin.options.htmlAttributes %>> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <%- htmlWebpackPlugin.options.htmlAttributes %>> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <%- htmlWebpackPlugin.options.htmlAttributes %>> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <%- htmlWebpackPlugin.options.htmlAttributes %>> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <%- htmlWebpackPlugin.options.htmlAttributes %>> <!--<![endif]-->
 <head>
-	<title><%= htmlWebpackPlugin.options.name %></title>
+	<title><% htmlWebpackPlugin.options.title %></title>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<%_ if (htmlWebpackPlugin.files.favicon) { _%>
-	<%_ } _%>
 	<%_ for (var css in htmlWebpackPlugin.files.css) { _%>
 	<link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
 	<%_ } _%>
@@ -26,12 +24,19 @@
 	</script>
 	<%_ } _%>
 	<link rel="shortcut icon" href="<%= htmlWebpackPlugin.files.favicon %>">
+	<%- htmlWebpackPlugin.options.meta %>
+	<%- htmlWebpackPlugin.options.link %>
+	<%- htmlWebpackPlugin.options.style %>
 </head>
 <body>
-	<div id="mount"></div>
+	<div id="mount"><%- htmlWebpackPlugin.options.html %></div>
+	<%_ if (htmlWebpackPlugin.options.state) { _%>
+	<script id="state" type="text/json"><%- htmlWebpackPlugin.options.state %></script>
+	<%_ } _%>
 
 	<%_ for (var js in htmlWebpackPlugin.files.js) { _%>
 	<script src="<%= htmlWebpackPlugin.files.js[js] %>"></script>
 	<%_ } _%>
+	<%- htmlWebpackPlugin.options.script %>
 </body>
 </html>

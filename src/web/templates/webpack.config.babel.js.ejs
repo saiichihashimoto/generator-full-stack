@@ -92,7 +92,6 @@ export default {
 				filename:        'index.ejs',
 				template:        'ejs-compiled!./web/index.ejs',
 				inject:          false,
-				title:           process.env.npm_package_name,
 				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
 			}),
 <%_ } _%>
@@ -106,8 +105,8 @@ export default {
 				filename:        (route + '/index.html').replace(/\/+/, ''),
 				template:        'ejs-compiled!./web/index.ejs',
 				inject:          false,
-				title:           process.env.npm_package_name,
 				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
+				title:           process.env.npm_package_name,
 			});
 		}))
 <%_ } _%>
