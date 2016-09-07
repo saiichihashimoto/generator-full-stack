@@ -86,31 +86,23 @@ export default {
 			new FaviconsWebpackPlugin({ logo: './assets/images/logo.png', title: process.env.npm_package_name, prefix: 'favicons-[hash]/' }),
 <%_ if (dynamic) { _%>
 			new HtmlWebpackPlugin({
-				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID && {
-					trackingId:     process.env.GOOGLE_ANALYTICS_ID,
-					pageViewOnLoad: true,
-				},
-				title:      process.env.npm_package_name,
-				inject:     false,
-				template:   require('html-webpack-template'),
-				appMountId: 'mount',
-				mobile:     true,
+				template:        'ejs-compiled!./web/index.ejs',
+				inject:          false,
+				title:           process.env.npm_package_name,
+				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
 			}),
 <%_ } _%>
 		]
 <%_ if (!dynamic) { _%>
-			.concat(reactRouterToArray(routes).map((route) => new HtmlWebpackPlugin({
-				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID && {
-					trackingId:     process.env.GOOGLE_ANALYTICS_ID,
-					pageViewOnLoad: true,
-				},
-				title:      process.env.npm_package_name,
-				filename: (route + '/index.html').replace(/\/+/, ''),
-				inject:     false,
-				template:   require('html-webpack-template'),
-				appMountId: 'mount',
-				mobile:     true,
-			})))
+			.concat(reactRouterToArray(routes).map((route) => {
+				return new HtmlWebpackPlugin({
+					filename:        (route + '/index.html').replace(/\/+/, ''),
+					template:        'ejs-compiled!./web/index.ejs',
+					inject:          false,
+					title:           process.env.npm_package_name,
+					googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
+				});
+			}))
 <%_ } _%>
 	),
 	postcss: () => [nested, autoprefixer],

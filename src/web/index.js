@@ -39,6 +39,7 @@ export default class WebGenerator extends Base {
 		this.fs.copy(this.templatePath('index.web.js'), this.destinationPath('index.web.js'));
 		this.fs.copy(this.templatePath('redux/actions.js'), this.destinationPath('redux/actions.js'));
 		this.fs.copy(this.templatePath('redux/actions.web.js'), this.destinationPath('redux/actions.web.js'));
+		this.fs.copy(this.templatePath('redux/createStore.js'), this.destinationPath('redux/createStore.js'));
 		this.fs.copy(this.templatePath('redux/createStore.web.js'), this.destinationPath('redux/createStore.web.js'));
 		this.fs.copy(this.templatePath('redux/entities.actions.js'), this.destinationPath('redux/entities.actions.js'));
 		this.fs.copy(this.templatePath('redux/entities.reducer.js'), this.destinationPath('redux/entities.reducer.js'));
@@ -48,9 +49,10 @@ export default class WebGenerator extends Base {
 		this.fs.write(this.destinationPath('.env.default'), '');
 
 		if (this.options.dynamic) {
-			// TODO this.fs.copy(this.templatePath('redux/createStore.js'), this.destinationPath('redux/createStore.js'));
+			this.fs.copy(this.templatePath('web/index.ejs'), this.destinationPath('web/index.ejs'));
 		} else {
 			this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
+			this.fs.copy(this.templatePath('web/index.web.ejs'), this.destinationPath('web/index.ejs'));
 		}
 	}
 	installing() {
@@ -65,7 +67,6 @@ export default class WebGenerator extends Base {
 				'feathers',
 				'feathers-rest',
 				'html-webpack-plugin',
-				'html-webpack-template',
 				'image-webpack-loader',
 				'json-loader',
 				'lodash.compact',
@@ -91,6 +92,7 @@ export default class WebGenerator extends Base {
 				'autoprefixer',
 				'classnames',
 				'css-modules-require-hook',
+				'ejs-compiled-loader',
 				'lodash.isarray',
 				'lodash.mapvalues',
 				'normalizr',
