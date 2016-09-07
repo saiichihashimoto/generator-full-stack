@@ -1,4 +1,3 @@
-import compact from 'lodash.compact';
 import { Base } from 'yeoman-generator';
 
 export default class AppGenerator extends Base {
@@ -6,29 +5,44 @@ export default class AppGenerator extends Base {
 		super(...args);
 
 		this.argument('name', { type: String, desc: 'Package name' });
-
-		this.option('dynamic', { type: Boolean, desc: 'If the content will be dynamically rendered' });
+		this.option('renderOn', { type: String, desc: 'When the documents should be rendered (build/serve/mount)' });
 	}
 	prompting() {
 		return Promise.resolve()
-			.then(() => this.prompt(compact([
-				(this.options.dynamic === undefined) && {
-					message: 'Will the content be dynamically rendered?',
-					name:    'dynamic',
-					type:    'confirm',
-					default: true,
-				},
-			])))
-			.then((answers) => {
-				if (answers.dynamic !== undefined) {
-					this.options.dynamic = answers.dynamic;
-				}
+			.then(() => {
+				return this.prompt([{
+					message: 'Platforms',
+					name:    'platforms',
+					type:    'checkbox',
+					choices: [
+						{ name: 'Website', value: 'web' },
+						{ name: 'Server', value: 'server' },
+					],
+				}])
+					.then((answers) => Object.assign(this.options, answers));
 			})
 			.then(() => {
-				if (this.options.dynamic) {
-					this.composeWith('full-stack:server', { options: { dynamic: this.options.dynamic, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-				} else {
-					this.composeWith('full-stack:web', { options: { dynamic: false, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+				if (!this.options.platforms.includes('web')) {
+					return;
+				}
+				return this.prompt([!this.options.renderOn && {
+					message: 'Render on',
+					name:    'renderOn',
+					type:    'expand',
+					choices: [
+						{ name: 'Build', value: 'build' },
+						{ name: 'Serve', value: 'serve' },
+						{ name: 'Mount', value: 'mount' },
+					],
+				}])
+					.then((answers) => Object.assign(this.options, answers));
+			})
+			.then(() => {
+				if (this.options.platforms.includes('server')) {
+					this.composeWith('full-stack:server', { options: this.options });
+				}
+				if (this.options.platforms.includes('web')) {
+					this.composeWith('full-stack:web', { options: this.options });
 				}
 			});
 	}
@@ -39,6 +53,7 @@ export default class AppGenerator extends Base {
 		this.fs.copy(this.templatePath('.babelrc'), this.destinationPath('.babelrc'));
 		this.fs.copy(this.templatePath('.travis.yml'), this.destinationPath('.travis.yml'));
 		this.fs.copy(this.templatePath('assets/images/logo.png'), this.destinationPath('assets/images/logo.png'));
+		this.fs.copyTpl(this.templatePath('Procfile.dev.ejs'), this.destinationPath('Procfile.dev'), Object.assign({}, this, this.options));
 		this.fs.copyTpl(this.templatePath('package.json.ejs'), this.destinationPath('package.json'), Object.assign({}, this, this.options));
 		this.fs.write(this.destinationPath('.env'), '');
 	}

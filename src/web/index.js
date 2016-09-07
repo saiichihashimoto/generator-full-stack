@@ -5,23 +5,7 @@ export default class WebGenerator extends Base {
 	constructor(...args) {
 		super(...args);
 
-		this.option('dynamic', { type: Boolean, desc: 'If the content will be dynamically rendered' });
-	}
-	prompting() {
-		return Promise.resolve()
-			.then(() => this.prompt(compact([
-				(this.options.dynamic === undefined) && {
-					message: 'Will the content be dynamically rendered?',
-					name:    'dynamic',
-					type:    'confirm',
-					default: true,
-				},
-			])))
-			.then((answers) => {
-				if (answers.dynamic !== undefined) {
-					this.options.dynamic = answers.dynamic;
-				}
-			});
+		this.option('renderOn', { type: String, desc: 'When the documents should be rendered (build/serve/mount)' });
 	}
 	writing() {
 		this.fs.copy(this.templatePath('../../../.stylelintrc'), this.destinationPath('.stylelintrc'));
@@ -44,20 +28,81 @@ export default class WebGenerator extends Base {
 		this.fs.copy(this.templatePath('redux/entities.actions.js'), this.destinationPath('redux/entities.actions.js'));
 		this.fs.copy(this.templatePath('redux/entities.reducer.js'), this.destinationPath('redux/entities.reducer.js'));
 		this.fs.copy(this.templatePath('report/index.web.js'), this.destinationPath('report/index.web.js'));
-		this.fs.copyTpl(this.templatePath('Procfile.dev.ejs'), this.destinationPath('Procfile.dev'), Object.assign({}, this, this.options));
 		this.fs.copyTpl(this.templatePath('webpack.config.babel.js.ejs'), this.destinationPath('webpack.config.babel.js'), Object.assign({}, this, this.options));
 		this.fs.write(this.destinationPath('.env.default'), '');
 
-		if (this.options.dynamic) {
-			this.fs.copy(this.templatePath('web/index.ejs'), this.destinationPath('web/index.ejs'));
-			this.fs.copy(this.templatePath('web/render.middleware.js'), this.destinationPath('web/render.middleware.js'));
-		} else {
-			this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
-			this.fs.copy(this.templatePath('web/index.web.ejs'), this.destinationPath('web/index.ejs'));
+		switch (this.options.renderOn) {
+			case 'build':
+				this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
+				this.fs.copy(this.templatePath('web/index.web.ejs'), this.destinationPath('web/index.ejs'));
+				break;
+			case 'serve':
+				this.fs.copy(this.templatePath('web/index.ejs'), this.destinationPath('web/index.ejs'));
+				this.fs.copy(this.templatePath('web/render.middleware.js'), this.destinationPath('web/render.middleware.js'));
+				break;
+			case 'mount':
+				this.fs.copy(this.templatePath('web/index.web.ejs'), this.destinationPath('web/index.ejs'));
+				break;
+			default:
+				break;
 		}
 	}
 	installing() {
-		if (this.options.dynamic) {
+		let whereToSave;
+		switch (this.options.renderOn) {
+			case 'build':
+				whereToSave = { saveDev: true };
+				break;
+			case 'serve':
+				whereToSave = { save: true };
+				break;
+			default:
+				break;
+		}
+		if (whereToSave) {
+			this.npmInstall(
+				[
+					'autoprefixer',
+					'babel-loader',
+					'babel-register',
+					'bell-on-bundler-error-plugin',
+					'classnames',
+					'css-loader',
+					'css-modules-require-hook',
+					'ejs-compiled-loader',
+					'extract-text-webpack-plugin',
+					'favicons-webpack-plugin',
+					'html-webpack-plugin',
+					'image-webpack-loader',
+					'json-loader',
+					'lodash.compact',
+					'lodash.head',
+					'lodash.isarray',
+					'lodash.mapvalues',
+					'lodash.tail',
+					'normalizr',
+					'pluralize',
+					'postcss-loader',
+					'postcss-nested',
+					'react',
+					'react-dom',
+					'react-redux',
+					'react-router',
+					'redux',
+					'redux-actions',
+					'redux-thunk',
+					'require-all',
+					'reselect',
+					'style-loader',
+					'url-loader',
+					'webpack',
+					'webpack-dotenv-plugin',
+				],
+				whereToSave
+			);
+		}
+
+		if (this.options.renderOn === 'serve') {
 			this.npmInstall(
 				[
 					'clean-webpack-plugin',
@@ -74,53 +119,13 @@ export default class WebGenerator extends Base {
 				'feathers-rest',
 				'raven-js',
 				'react-hot-loader@1.3.0',
-				!this.options.dynamic && 'react-router-to-array',
+				(this.options.renderOn === 'build') && 'react-router-to-array',
 				'stylefmt',
 				'stylelint',
 				'stylelint-config-standard',
 				'webpack-dev-server',
 			]),
 			{ saveDev: true }
-		);
-		this.npmInstall(
-			[
-				'autoprefixer',
-				'babel-loader',
-				'babel-register',
-				'bell-on-bundler-error-plugin',
-				'classnames',
-				'css-loader',
-				'css-modules-require-hook',
-				'ejs-compiled-loader',
-				'extract-text-webpack-plugin',
-				'favicons-webpack-plugin',
-				'html-webpack-plugin',
-				'image-webpack-loader',
-				'json-loader',
-				'lodash.compact',
-				'lodash.head',
-				'lodash.isarray',
-				'lodash.mapvalues',
-				'lodash.tail',
-				'normalizr',
-				'pluralize',
-				'postcss-loader',
-				'postcss-nested',
-				'react',
-				'react-dom',
-				'react-redux',
-				'react-router',
-				'redux',
-				'redux-actions',
-				'redux-thunk',
-				'require-all',
-				'reselect',
-				'style-loader',
-				'url-loader',
-				'webpack',
-				'webpack-dotenv-plugin',
-			],
-			this.options.dynamic ? { save: true } : { saveDev: true }
 		);
 	}
 }

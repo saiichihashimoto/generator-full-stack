@@ -1,4 +1,4 @@
-<%_ if (dynamic) { _%>
+<%_ if (renderOn === 'serve') { _%>
 import 'css-modules-require-hook/preset';
 <%_ } _%>
 import bodyParser from 'body-parser';
@@ -9,7 +9,7 @@ import raven from 'raven';
 import { NotFound } from 'feathers-errors';
 
 import api from './api';
-<%_ if (dynamic) { _%>
+<%_ if (renderOn === 'serve') { _%>
 import render from './web/render.middleware';;
 <%_ } _%>
 import report from './report';
@@ -24,7 +24,7 @@ feathers()
 	.use(raven.middleware.express.requestHandler(report))
 
 	.use(feathers.static('dist/web', { index: false }))
-<%_ if (dynamic) { _%>
+<%_ if (renderOn === 'serve') { _%>
 
 	.set('view engine', 'ejs')
 	.set('view options', { delimiter: '$' })
