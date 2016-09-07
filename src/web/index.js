@@ -34,39 +34,36 @@ export default class WebGenerator extends Base {
 		this.fs.copy(this.templatePath('components/global.styles.css'), this.destinationPath('components/global.styles.css'));
 		this.fs.copy(this.templatePath('components/routes.js'), this.destinationPath('components/routes.js'));
 		this.fs.copy(this.templatePath('entities/foos/schema.normalizr.js'), this.destinationPath('entities/foos/schema.normalizr.js'));
+		this.fs.copy(this.templatePath('entities/schemas.normalizr.js'), this.destinationPath('entities/schemas.normalizr.js'));
 		this.fs.copy(this.templatePath('entities/schemas.normalizr.web.js'), this.destinationPath('entities/schemas.normalizr.web.js'));
 		this.fs.copy(this.templatePath('index.web.js'), this.destinationPath('index.web.js'));
+		this.fs.copy(this.templatePath('redux/actions.js'), this.destinationPath('redux/actions.js'));
 		this.fs.copy(this.templatePath('redux/actions.web.js'), this.destinationPath('redux/actions.web.js'));
 		this.fs.copy(this.templatePath('redux/createStore.web.js'), this.destinationPath('redux/createStore.web.js'));
 		this.fs.copy(this.templatePath('redux/entities.actions.js'), this.destinationPath('redux/entities.actions.js'));
 		this.fs.copy(this.templatePath('redux/entities.reducer.js'), this.destinationPath('redux/entities.reducer.js'));
 		this.fs.copy(this.templatePath('report/index.web.js'), this.destinationPath('report/index.web.js'));
-		this.fs.copy(this.templatePath('webpack.config.babel.js'), this.destinationPath('webpack.config.babel.js'));
 		this.fs.copyTpl(this.templatePath('Procfile.dev.ejs'), this.destinationPath('Procfile.dev'), Object.assign({}, this, this.options));
+		this.fs.copyTpl(this.templatePath('webpack.config.babel.js.ejs'), this.destinationPath('webpack.config.babel.js'), Object.assign({}, this, this.options));
 		this.fs.write(this.destinationPath('.env.default'), '');
 
 		if (this.options.dynamic) {
-			this.fs.copy(this.templatePath('entities/schemas.normalizr.js'), this.destinationPath('entities/schemas.normalizr.js'));
-			this.fs.copy(this.templatePath('redux/actions.js'), this.destinationPath('redux/actions.js'));
 			// TODO this.fs.copy(this.templatePath('redux/createStore.js'), this.destinationPath('redux/createStore.js'));
+		} else {
+			this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
 		}
 	}
 	installing() {
 		this.npmInstall(
 			compact([
-				this.options.dynamic && 'require-all',
-			]),
-			{ save: true }
-		);
-		this.npmInstall(
-			[
 				'babel-loader',
 				'babel-register',
 				'bell-on-bundler-error-plugin',
 				'css-loader',
 				'extract-text-webpack-plugin',
-				'feathers-rest',
 				'favicons-webpack-plugin',
+				'feathers',
+				'feathers-rest',
 				'html-webpack-plugin',
 				'html-webpack-template',
 				'image-webpack-loader',
@@ -75,9 +72,9 @@ export default class WebGenerator extends Base {
 				'lodash.head',
 				'lodash.tail',
 				'postcss-loader',
-				'feathers',
 				'raven-js',
 				'react-hot-loader@1.3.0',
+				!this.options.dynamic && 'react-router-to-array',
 				'style-loader',
 				'stylefmt',
 				'stylelint',
@@ -86,7 +83,7 @@ export default class WebGenerator extends Base {
 				'webpack',
 				'webpack-dev-server',
 				'webpack-dotenv-plugin',
-			],
+			]),
 			{ saveDev: true }
 		);
 		this.npmInstall(
@@ -103,11 +100,11 @@ export default class WebGenerator extends Base {
 				'react-dom',
 				'react-redux',
 				'react-router',
-				'redux', // TODO Need a server createStore.js
+				'redux',
 				'redux-actions',
-				'redux-thunk', // TODO Need a server createStore.js
+				'redux-thunk',
+				'require-all',
 				'reselect',
-				// TODO 'react-router-to-array',
 			],
 			this.options.dynamic ? { save: true } : { saveDev: true }
 		);

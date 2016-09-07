@@ -1,14 +1,6 @@
-// TODO https://github.com/saiichihashimoto/generator-full-stack/issues/4
-//
-// import 'css-modules-require-hook/preset';
-// import reactRouterToArray from 'react-router-to-array';
-//
-// import routes from './components/routes';
-//
-// reactRouterToArray(routes).map((route) => new HtmlWebpackPlugin({
-// 	filename: (route + '/index.html').replace(/\/+/, ''),
-// }))
-
+<%_ if (!dynamic) { _%>
+import 'css-modules-require-hook/preset';
+<%_ } _%>
 import BellOnBundlerErrorPlugin from 'bell-on-bundler-error-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
@@ -18,8 +10,15 @@ import compact from 'lodash.compact';
 import head from 'lodash.head';
 import nested from 'postcss-nested';
 import path from 'path';
+<%_ if (!dynamic) { _%>
+import reactRouterToArray from 'react-router-to-array';
+<%_ } _%>
 import tail from 'lodash.tail';
 import webpack from 'webpack';
+<%_ if (!dynamic) { _%>
+
+import routes from './components/routes';
+<%_ } _%>
 
 const cssLoaders = ['style', 'css?-autoprefixer&importLoaders=1&camelCase&modules&localIdentName=[name]---[local]', 'postcss'];
 
@@ -55,10 +54,14 @@ export default {
 	bail:      process.env.NODE_ENV,
 	devtool:   'cheap-module-source-map',
 	devServer: {
+<%_ if (dynamic) { _%>
 		port:               process.env.PORT,
 		historyApiFallback: {
 			index: '/',
 		},
+<%_ } else { _%>
+		port: process.env.PORT,
+<%_ } _%>
 		stats: {
 			colors: true,
 		},
@@ -70,27 +73,45 @@ export default {
 		net:     'empty',
 		tls:     'empty',
 	},
-	plugins: compact([
-		new webpack.EnvironmentPlugin([
-			'NODE_ENV',
-			'SENTRY_DSN_CLIENT',
-			'npm_package_version',
-		]),
-		new BellOnBundlerErrorPlugin(),
-		!process.env.NODE_ENV && new require('webpack-dotenv-plugin')(),
-		process.env.NODE_ENV && new ExtractTextPlugin('css/[name].[hash].css'),
-		new FaviconsWebpackPlugin({ logo: './assets/images/logo.png', title: process.env.npm_package_name, prefix: 'favicons-[hash]/' }),
-		new HtmlWebpackPlugin({
-			googleAnalytics: process.env.GOOGLE_ANALYTICS_ID && {
-				trackingId:     process.env.GOOGLE_ANALYTICS_ID,
-				pageViewOnLoad: true,
-			},
-			title:      process.env.npm_package_name,
-			inject:     false,
-			template:   require('html-webpack-template'),
-			appMountId: 'mount',
-			mobile:     true,
-		}),
-	]),
+	plugins: compact(
+		[
+			new webpack.EnvironmentPlugin([
+				'NODE_ENV',
+				'SENTRY_DSN_CLIENT',
+				'npm_package_version',
+			]),
+			new BellOnBundlerErrorPlugin(),
+			!process.env.NODE_ENV && new require('webpack-dotenv-plugin')(),
+			process.env.NODE_ENV && new ExtractTextPlugin('css/[name].[hash].css'),
+			new FaviconsWebpackPlugin({ logo: './assets/images/logo.png', title: process.env.npm_package_name, prefix: 'favicons-[hash]/' }),
+<%_ if (dynamic) { _%>
+			new HtmlWebpackPlugin({
+				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID && {
+					trackingId:     process.env.GOOGLE_ANALYTICS_ID,
+					pageViewOnLoad: true,
+				},
+				title:      process.env.npm_package_name,
+				inject:     false,
+				template:   require('html-webpack-template'),
+				appMountId: 'mount',
+				mobile:     true,
+			}),
+<%_ } _%>
+		]
+<%_ if (!dynamic) { _%>
+			.concat(reactRouterToArray(routes).map((route) => new HtmlWebpackPlugin({
+				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID && {
+					trackingId:     process.env.GOOGLE_ANALYTICS_ID,
+					pageViewOnLoad: true,
+				},
+				title:      process.env.npm_package_name,
+				filename: (route + '/index.html').replace(/\/+/, ''),
+				inject:     false,
+				template:   require('html-webpack-template'),
+				appMountId: 'mount',
+				mobile:     true,
+			})))
+<%_ } _%>
+	),
 	postcss: () => [nested, autoprefixer],
 };

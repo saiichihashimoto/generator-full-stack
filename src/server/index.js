@@ -24,7 +24,7 @@ export default class ServerGenerator extends Base {
 			})
 			.then(() => {
 				if (this.options.dynamic) {
-					this.composeWith('full-stack:web', { options: { dynamic: true } });
+					this.composeWith('full-stack:web', { options: { dynamic: true, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
 				}
 			});
 	}

@@ -26,9 +26,9 @@ export default class AppGenerator extends Base {
 			})
 			.then(() => {
 				if (this.options.dynamic) {
-					this.composeWith('full-stack:server', { options: { dynamic: this.options.dynamic } });
+					this.composeWith('full-stack:server', { options: { dynamic: this.options.dynamic, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
 				} else {
-					this.composeWith('full-stack:web', { options: { dynamic: false } });
+					this.composeWith('full-stack:web', { options: { dynamic: false, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
 				}
 			});
 	}
