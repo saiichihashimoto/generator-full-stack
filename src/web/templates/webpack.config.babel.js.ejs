@@ -1,0 +1,172 @@
+<%_ if (renderOn === 'build' || renderOn === 'mount') { _%>
+import 'css-modules-require-hook/preset';
+<%_ } _%>
+import BellOnBundlerErrorPlugin from 'bell-on-bundler-error-plugin';
+<%_ if (renderOn === 'serve') { _%>
+import CleanWebpackPlugin from 'clean-webpack-plugin';
+<%_ } _%>
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
+<%_ if (renderOn === 'build') { _%>
+import Helmet from "react-helmet";
+import React from 'react';
+<%_ } _%>
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+<%_ if (renderOn === 'serve') { _%>
+import WriteFilePlugin from 'write-file-webpack-plugin';
+<%_ } _%>
+import autoprefixer from 'autoprefixer';
+import compact from 'lodash.compact';
+import head from 'lodash.head';
+import nested from 'postcss-nested';
+import path from 'path';
+<%_ if (renderOn === 'build' || renderOn === 'mount') { _%>
+import reactRouterToArray from 'react-router-to-array';
+<%_ } _%>
+import tail from 'lodash.tail';
+import webpack from 'webpack';
+<%_ if (renderOn === 'build') { _%>
+import { GeneralError, NotFoundError } from 'feathers-errors';
+import { Provider } from 'react-redux';
+import { RouterContext, match } from 'react-router';
+import { renderToString } from 'react-dom/server';
+<%_ } _%>
+<%_ if (renderOn === 'build' || renderOn === 'mount') { _%>
+
+<%_ if (renderOn === 'build') { _%>
+import createStore from './redux/createStore';
+<%_ } _%>
+import routes from './components/routes';
+<%_ } _%>
+
+const cssLoaders = ['style', 'css?-autoprefixer&importLoaders=1&camelCase&modules&localIdentName=[name]---[local]', 'postcss'];
+
+export default {
+	entry: {
+		index: '.',
+	},
+	output: {
+		path:       'dist/web',
+		filename:   'js/[name].[hash].js',
+		publicPath: '/',
+	},
+	module: {
+		loaders: compact([
+			process.env.NODE_ENV ?
+				{ exclude: /node_modules/, test: /\.(css)$/, loader: ExtractTextPlugin.extract(head(cssLoaders), tail(cssLoaders)) } :
+				{ exclude: /node_modules/, test: /\.(css)$/, loaders: cssLoaders },
+			{ exclude: /node_modules/, test: /\.(eot|ttf|(woff(2)?(\?v=\d\.\d\.\d)?))$/, loader: 'url?name=fonts/[name].[hash].[ext]&limit=10000' },
+			{ exclude: /node_modules/, test: /\.(gif|jpe?g|svg|png)$/i, loaders: ['url?name=images/[name].[hash].[ext]&limit=1000', 'image-webpack'] },
+			!process.env.NODE_ENV && { include: path.join(__dirname, 'components'), test: /\.(js)$/, loader: 'react-hot' },
+			{ exclude: /node_modules/, test: /\.(js)$/, loader: 'babel?cacheDirectory' },
+			{ exclude: /node_modules/, test: /\.(json)$/, loader: 'json' },
+		]),
+	},
+	resolve: {
+		extensions: [
+			'',
+			'.webpack.json', '.webpack.js', '.webpack.css',
+			'.web.json', '.web.js', '.web.css',
+			'.json', '.js', '.css',
+		],
+	},
+	bail:      process.env.NODE_ENV,
+	devtool:   'cheap-module-source-map',
+	devServer: {
+		stats: {
+			colors: true,
+		},
+		outputPath: 'dist/web',
+		port:       process.env.PORT,
+	},
+	node: {
+		console: true,
+		dns:     'empty',
+		fs:      'empty',
+		net:     'empty',
+		tls:     'empty',
+	},
+	plugins: compact(
+		[
+			new webpack.EnvironmentPlugin([
+				'NODE_ENV',
+				'SENTRY_DSN_CLIENT',
+				'npm_package_version',
+			]),
+			new BellOnBundlerErrorPlugin(),
+<%_ if (renderOn === 'serve') { _%>
+			new CleanWebpackPlugin(['dist/web']),
+<%_ } _%>
+			!process.env.NODE_ENV && new require('webpack-dotenv-plugin')(),
+			process.env.NODE_ENV && new ExtractTextPlugin('css/[name].[hash].css'),
+			new FaviconsWebpackPlugin({ logo: './assets/images/logo.png', title: process.env.npm_package_name, prefix: 'favicons-[hash]/' }),
+<%_ if (renderOn === 'serve') { _%>
+			new HtmlWebpackPlugin({
+				filename:        'index.ejs',
+				template:        'ejs-compiled!./web/index.ejs',
+				inject:          false,
+				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
+			}),
+<%_ } _%>
+<%_ if (renderOn === 'serve') { _%>
+			new WriteFilePlugin({ log: false }),
+<%_ } _%>
+		]
+<%_ if (renderOn === 'build') { _%>
+		.concat(reactRouterToArray(routes).map((route) => {
+			// HACK Using react-router's zalgo-ed match
+			// - Discussion about it being zalgo-ed: https://github.com/reactjs/react-router/issues/1777#issuecomment-148415982
+			// - Why it's bad: http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony
+			let error            = 'nope';
+			let redirectLocation = 'nope';
+			let renderProps      = 'nope';
+			match({ routes: routes, location: route }, (matchError, matchRedirectLocation, matchRenderProps) => {
+				error = matchError;
+				redirectLocation = matchRedirectLocation;
+				renderProps = matchRenderProps;
+			});
+			if (error) {
+				throw new GeneralError(error.message);
+			}
+			if (!renderProps) {
+				return new HtmlWebpackPlugin({
+					filename:        (route + '/index.html').replace(/\/+/, ''),
+					template:        'ejs-compiled!./web/index.ejs',
+					inject:          false,
+					googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
+					title:           '<title>' + process.env.npm_package_name + '</title>',
+				});
+			}
+			const store = createStore();
+			const html  = renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>);
+			const head  = Helmet.rewind();
+
+			return new HtmlWebpackPlugin({
+				filename:        (route + '/index.html').replace(/\/+/, ''),
+				template:        'ejs-compiled!./web/index.ejs',
+				inject:          false,
+				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
+				html:            html,
+				state:           JSON.stringify(store.getState()),
+				htmlAttributes:  head.htmlAttributes.toString(),
+				title:           head.title.toString(),
+				meta:            head.meta.toString(),
+				link:            head.link.toString(),
+				style:           head.style.toString(),
+				script:          head.script.toString(),
+			});
+		}))
+<%_ } else if (renderOn === 'mount') { _%>
+		.concat(reactRouterToArray(routes).map((route) => {
+			return new HtmlWebpackPlugin({
+				filename:        (route + '/index.html').replace(/\/+/, ''),
+				template:        'ejs-compiled!./web/index.ejs',
+				inject:          false,
+				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
+				title:           '<title>' + process.env.npm_package_name + '</title>',
+			});
+		}))
+<%_ } _%>
+	),
+	postcss: () => [nested, autoprefixer],
+};

@@ -1,0 +1,6 @@
+<%_ if (platforms.includes('server')) { _%>
+web: nodemon --exec babel-node --ignore dist/ -- index
+<%_ } _%>
+<%_ if (platforms.includes('web')) { _%>
+www: webpack-dev-server --inline --hot --host 0.0.0.0
+<%_ } _%>
