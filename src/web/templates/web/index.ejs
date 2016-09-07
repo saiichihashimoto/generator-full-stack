@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!--[if lt IE 7 ]> <html lang="en" class="ie6" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <$- htmlAttributes.toString() $>> <![endif]-->
-<!--[if IE 7 ]>    <html lang="en" class="ie7" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <$- htmlAttributes.toString() $>> <![endif]-->
-<!--[if IE 8 ]>    <html lang="en" class="ie8" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <$- htmlAttributes.toString() $>> <![endif]-->
-<!--[if IE 9 ]>    <html lang="en" class="ie9" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <$- htmlAttributes.toString() $>> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <$- htmlAttributes.toString() $>> <!--<![endif]-->
+<!--[if lt IE 7 ]> <html lang="en" class="ie6" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <$- htmlAttributes $>> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <$- htmlAttributes $>> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <$- htmlAttributes $>> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <$- htmlAttributes $>> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <$- htmlAttributes $>> <!--<![endif]-->
 <head>
-	<title><$ title.toString() $></title>
+	<title><$ title $></title>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,18 +26,17 @@
 	</script>
 	<%_ } _%>
 	<link rel="shortcut icon" href="<%= htmlWebpackPlugin.files.favicon %>">
-	<$- base.toString() $>
-	<$- meta.toString() $>
-	<$- link.toString() $>
-	<$- style.toString() $>
+	<$- meta $>
+	<$- link $>
+	<$- style $>
 </head>
 <body>
 	<div id="mount"><$- html $></div>
-	<script id="state" type="text/json"><$- JSON.stringify(state) $></script>
+	<script id="state" type="text/json"><$- state $></script>
 
 	<%_ for (var js in htmlWebpackPlugin.files.js) { _%>
 	<script src="<%= htmlWebpackPlugin.files.js[js] %>"></script>
 	<%_ } _%>
-	<$- script.toString() $>
+	<$- script $>
 </body>
 </html>

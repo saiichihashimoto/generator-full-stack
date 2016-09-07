@@ -50,53 +50,61 @@ export default class WebGenerator extends Base {
 
 		if (this.options.dynamic) {
 			this.fs.copy(this.templatePath('web/index.ejs'), this.destinationPath('web/index.ejs'));
+			this.fs.copy(this.templatePath('web/render.middleware.js'), this.destinationPath('web/render.middleware.js'));
 		} else {
 			this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
 			this.fs.copy(this.templatePath('web/index.web.ejs'), this.destinationPath('web/index.ejs'));
 		}
 	}
 	installing() {
+		if (this.options.dynamic) {
+			this.npmInstall(
+				[
+					'clean-webpack-plugin',
+					'ejs',
+					'feathers-errors',
+					'write-file-webpack-plugin',
+				],
+				{ save: true }
+			);
+		}
 		this.npmInstall(
 			compact([
-				'babel-loader',
-				'babel-register',
-				'bell-on-bundler-error-plugin',
-				'css-loader',
-				'extract-text-webpack-plugin',
-				'favicons-webpack-plugin',
 				'feathers',
 				'feathers-rest',
-				'html-webpack-plugin',
-				'image-webpack-loader',
-				'json-loader',
-				'lodash.compact',
-				'lodash.head',
-				'lodash.tail',
-				'postcss-loader',
 				'raven-js',
 				'react-hot-loader@1.3.0',
 				!this.options.dynamic && 'react-router-to-array',
-				'style-loader',
 				'stylefmt',
 				'stylelint',
 				'stylelint-config-standard',
-				'url-loader',
-				'webpack',
 				'webpack-dev-server',
-				'webpack-dotenv-plugin',
 			]),
 			{ saveDev: true }
 		);
 		this.npmInstall(
 			[
 				'autoprefixer',
+				'babel-loader',
+				'babel-register',
+				'bell-on-bundler-error-plugin',
 				'classnames',
+				'css-loader',
 				'css-modules-require-hook',
 				'ejs-compiled-loader',
+				'extract-text-webpack-plugin',
+				'favicons-webpack-plugin',
+				'html-webpack-plugin',
+				'image-webpack-loader',
+				'json-loader',
+				'lodash.compact',
+				'lodash.head',
 				'lodash.isarray',
 				'lodash.mapvalues',
+				'lodash.tail',
 				'normalizr',
 				'pluralize',
+				'postcss-loader',
 				'postcss-nested',
 				'react',
 				'react-dom',
@@ -107,6 +115,10 @@ export default class WebGenerator extends Base {
 				'redux-thunk',
 				'require-all',
 				'reselect',
+				'style-loader',
+				'url-loader',
+				'webpack',
+				'webpack-dotenv-plugin',
 			],
 			this.options.dynamic ? { save: true } : { saveDev: true }
 		);

@@ -33,8 +33,8 @@ export default class ServerGenerator extends Base {
 		this.fs.copy(this.templatePath('Procfile.dev'), this.destinationPath('Procfile.dev'));
 		this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
 		this.fs.copy(this.templatePath('entities/foos/service.js'), this.destinationPath('entities/foos/service.js'));
-		this.fs.copy(this.templatePath('index.js'), this.destinationPath('index.js'));
 		this.fs.copy(this.templatePath('report/index.js'), this.destinationPath('report/index.js'));
+		this.fs.copyTpl(this.templatePath('index.js.ejs'), this.destinationPath('index.js'), Object.assign({}, this, this.options));
 	}
 	installing() {
 		this.npmInstall(

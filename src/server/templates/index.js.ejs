@@ -1,6 +1,6 @@
-// TODO https://github.com/saiichihashimoto/generator-full-stack/issues/5
-// import 'css-modules-require-hook/preset';
-
+<%_ if (dynamic) { _%>
+import 'css-modules-require-hook/preset';
+<%_ } _%>
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import feathers from 'feathers';
@@ -9,6 +9,9 @@ import raven from 'raven';
 import { NotFound } from 'feathers-errors';
 
 import api from './api';
+<%_ if (dynamic) { _%>
+import render from './web/render.middleware';;
+<%_ } _%>
 import report from './report';
 
 const PORT = process.env.PORT || 5100;
@@ -19,6 +22,15 @@ feathers()
 	.use(bodyParser.json())
 	.use(bodyParser.urlencoded({ extended: true }))
 	.use(raven.middleware.express.requestHandler(report))
+
+	.use(feathers.static('dist/web', { index: false }))
+<%_ if (dynamic) { _%>
+
+	.set('view engine', 'ejs')
+	.set('view options', { delimiter: '$' })
+	.set('views', './dist/web')
+	.use(render)
+<%_ } _%>
 
 	.use('/api/v1', api)
 
