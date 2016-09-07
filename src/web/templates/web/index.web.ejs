@@ -5,7 +5,7 @@
 <!--[if IE 9 ]>    <html lang="en" class="ie9" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <%- htmlWebpackPlugin.options.htmlAttributes %>> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="" <% if (htmlWebpackPlugin.files.manifest) { %> manifest="<%= htmlWebpackPlugin.files.manifest %>"<% } %> <%- htmlWebpackPlugin.options.htmlAttributes %>> <!--<![endif]-->
 <head>
-	<title><% htmlWebpackPlugin.options.title %></title>
+	<%- htmlWebpackPlugin.options.title %>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">

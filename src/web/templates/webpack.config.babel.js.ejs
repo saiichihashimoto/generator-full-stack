@@ -8,6 +8,7 @@ import CleanWebpackPlugin from 'clean-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
 <%_ if (renderOn === 'build') { _%>
+import Helmet from "react-helmet";
 import React from 'react';
 <%_ } _%>
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -126,28 +127,33 @@ export default {
 			});
 			if (error) {
 				throw new GeneralError(error.message);
-			} else if (!redirectLocation && !renderProps) {
-				throw new NotFoundError(('Path not found', { path: route }));
 			}
-			if (renderProps) {
-				const store = createStore();
-
+			if (!renderProps) {
 				return new HtmlWebpackPlugin({
 					filename:        (route + '/index.html').replace(/\/+/, ''),
 					template:        'ejs-compiled!./web/index.ejs',
 					inject:          false,
 					googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
-					title:           process.env.npm_package_name,
-					html:            renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>),
-					state:           JSON.stringify(store.getState()),
+					title:           '<title>' + process.env.npm_package_name + '</title>',
 				});
 			}
+			const store = createStore();
+			const html  = renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>);
+			const head  = Helmet.rewind();
+
 			return new HtmlWebpackPlugin({
 				filename:        (route + '/index.html').replace(/\/+/, ''),
 				template:        'ejs-compiled!./web/index.ejs',
 				inject:          false,
 				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
-				title:           process.env.npm_package_name,
+				html:            html,
+				state:           JSON.stringify(store.getState()),
+				htmlAttributes:  head.htmlAttributes.toString(),
+				title:           head.title.toString(),
+				meta:            head.meta.toString(),
+				link:            head.link.toString(),
+				style:           head.style.toString(),
+				script:          head.script.toString(),
 			});
 		}))
 <%_ } else if (renderOn === 'mount') { _%>
@@ -157,7 +163,7 @@ export default {
 				template:        'ejs-compiled!./web/index.ejs',
 				inject:          false,
 				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
-				title:           process.env.npm_package_name,
+				title:           '<title>' + process.env.npm_package_name + '</title>',
 			});
 		}))
 <%_ } _%>

@@ -1,3 +1,4 @@
+import Helmet from 'react-helmet';
 import React from 'react';
 import { GeneralError } from 'feathers-errors';
 import { Provider } from 'react-redux';
@@ -16,16 +17,18 @@ export default function(req, res, next) {
 		} else if (renderProps) {
 			try {
 				const store = createStore();
+				const html  = renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>);
+				const head  = Helmet.rewind();
 
 				res.render('index', {
-					html:           renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>),
+					html:           html,
 					state:          JSON.stringify(store.getState()),
-					htmlAttributes: '',
-					title:          '',
-					meta:           '',
-					link:           '',
-					style:          '',
-					script:         '',
+					htmlAttributes: head.htmlAttributes.toString(),
+					title:          head.title.toString(),
+					meta:           head.meta.toString(),
+					link:           head.link.toString(),
+					style:          head.style.toString(),
+					script:         head.script.toString(),
 				});
 			} catch (err) {
 				next(err);
