@@ -71,6 +71,7 @@ export default class WebGenerator extends Base {
 					'ejs-compiled-loader',
 					'extract-text-webpack-plugin',
 					'favicons-webpack-plugin',
+					'feathers-errors',
 					'html-webpack-plugin',
 					'image-webpack-loader',
 					'json-loader',
@@ -106,7 +107,6 @@ export default class WebGenerator extends Base {
 				[
 					'clean-webpack-plugin',
 					'ejs',
-					'feathers-errors',
 					'write-file-webpack-plugin',
 				],
 				{ save: true }

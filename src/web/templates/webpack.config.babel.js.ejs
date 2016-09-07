@@ -7,6 +7,9 @@ import CleanWebpackPlugin from 'clean-webpack-plugin';
 <%_ } _%>
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
+<%_ if (renderOn === 'build') { _%>
+import React from 'react';
+<%_ } _%>
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 <%_ if (renderOn === 'serve') { _%>
 import WriteFilePlugin from 'write-file-webpack-plugin';
@@ -21,8 +24,17 @@ import reactRouterToArray from 'react-router-to-array';
 <%_ } _%>
 import tail from 'lodash.tail';
 import webpack from 'webpack';
+<%_ if (renderOn === 'build') { _%>
+import { GeneralError, NotFoundError } from 'feathers-errors';
+import { Provider } from 'react-redux';
+import { RouterContext, match } from 'react-router';
+import { renderToString } from 'react-dom/server';
+<%_ } _%>
 <%_ if (renderOn === 'build' || renderOn === 'mount') { _%>
 
+<%_ if (renderOn === 'build') { _%>
+import createStore from './redux/createStore';
+<%_ } _%>
 import routes from './components/routes';
 <%_ } _%>
 
@@ -99,7 +111,46 @@ export default {
 			new WriteFilePlugin({ log: false }),
 <%_ } _%>
 		]
-<%_ if (renderOn === 'build' || renderOn === 'mount') { _%>
+<%_ if (renderOn === 'build') { _%>
+		.concat(reactRouterToArray(routes).map((route) => {
+			// HACK Using react-router's zalgo-ed match
+			// - Discussion about it being zalgo-ed: https://github.com/reactjs/react-router/issues/1777#issuecomment-148415982
+			// - Why it's bad: http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony
+			let error            = 'nope';
+			let redirectLocation = 'nope';
+			let renderProps      = 'nope';
+			match({ routes: routes, location: route }, (matchError, matchRedirectLocation, matchRenderProps) => {
+				error = matchError;
+				redirectLocation = matchRedirectLocation;
+				renderProps = matchRenderProps;
+			});
+			if (error) {
+				throw new GeneralError(error.message);
+			} else if (!redirectLocation && !renderProps) {
+				throw new NotFoundError(('Path not found', { path: route }));
+			}
+			if (renderProps) {
+				const store = createStore();
+
+				return new HtmlWebpackPlugin({
+					filename:        (route + '/index.html').replace(/\/+/, ''),
+					template:        'ejs-compiled!./web/index.ejs',
+					inject:          false,
+					googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
+					title:           process.env.npm_package_name,
+					html:            renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>),
+					state:           JSON.stringify(store.getState()),
+				});
+			}
+			return new HtmlWebpackPlugin({
+				filename:        (route + '/index.html').replace(/\/+/, ''),
+				template:        'ejs-compiled!./web/index.ejs',
+				inject:          false,
+				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
+				title:           process.env.npm_package_name,
+			});
+		}))
+<%_ } else if (renderOn === 'mount') { _%>
 		.concat(reactRouterToArray(routes).map((route) => {
 			return new HtmlWebpackPlugin({
 				filename:        (route + '/index.html').replace(/\/+/, ''),
