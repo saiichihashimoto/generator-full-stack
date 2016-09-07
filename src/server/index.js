@@ -42,7 +42,6 @@ export default class ServerGenerator extends Base {
 				'babel-cli',
 				'body-parser',
 				'compression',
-				'cors',
 				'feathers',
 				'feathers-errors',
 				'feathers-memory',

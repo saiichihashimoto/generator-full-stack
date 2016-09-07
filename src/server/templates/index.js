@@ -3,7 +3,6 @@
 
 import bodyParser from 'body-parser';
 import compression from 'compression';
-import cors from 'cors';
 import feathers from 'feathers';
 import helmet from 'helmet';
 import raven from 'raven';
@@ -15,7 +14,6 @@ import report from './report';
 const PORT = process.env.PORT || 5100;
 
 feathers()
-	.use(cors({ origin: !process.env.NODE_ENV && 'http://localhost:5000' }))
 	.use(helmet())
 	.use(compression())
 	.use(bodyParser.json())
@@ -23,8 +21,6 @@ feathers()
 	.use(raven.middleware.express.requestHandler(report))
 
 	.use('/api/v1', api)
-
-	// TODO https://github.com/saiichihashimoto/generator-full-stack/issues/5
 
 	.all('*', (req, res, next) => next(new NotFound('Path not found', { path: req.path })))
 
