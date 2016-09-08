@@ -104,7 +104,6 @@ export default {
 			new HtmlWebpackPlugin({
 				filename:        'index.ejs',
 				template:        'ejs-compiled!./web/index.ejs',
-				inject:          false,
 				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
 			}),
 <%_ } _%>
@@ -132,7 +131,6 @@ export default {
 				return new HtmlWebpackPlugin({
 					filename:        (route + '/index.html').replace(/\/+/, ''),
 					template:        'ejs-compiled!./web/index.ejs',
-					inject:          false,
 					googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
 					title:           '<title>' + process.env.npm_package_name + '</title>',
 				});
@@ -144,7 +142,6 @@ export default {
 			return new HtmlWebpackPlugin({
 				filename:        (route + '/index.html').replace(/\/+/, ''),
 				template:        'ejs-compiled!./web/index.ejs',
-				inject:          false,
 				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
 				html:            html,
 				state:           JSON.stringify(store.getState()),
@@ -161,7 +158,6 @@ export default {
 			return new HtmlWebpackPlugin({
 				filename:        (route + '/index.html').replace(/\/+/, ''),
 				template:        'ejs-compiled!./web/index.ejs',
-				inject:          false,
 				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
 				title:           '<title>' + process.env.npm_package_name + '</title>',
 			});
