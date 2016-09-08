@@ -58,8 +58,10 @@ export default {
 			{ exclude: /node_modules/, test: /\.(eot|ttf|(woff(2)?(\?v=\d\.\d\.\d)?))$/, loader: 'url?name=fonts/[name].[hash].[ext]&limit=10000' },
 			{ exclude: /node_modules/, test: /\.(gif|jpe?g|svg|png)$/i, loaders: ['url?name=images/[name].[hash].[ext]&limit=1000', 'image-webpack'] },
 			!process.env.NODE_ENV && { include: path.join(__dirname, 'components'), test: /\.(js)$/, loader: 'react-hot' },
-			{ exclude: /node_modules/, test: /\.(js)$/, loader: 'babel?cacheDirectory' },
 			{ exclude: /node_modules/, test: /\.(json)$/, loader: 'json' },
+			{ exclude: /node_modules/, test: /\.(jsx?)$/, loader: 'babel?cacheDirectory' },
+			{ exclude: /node_modules/, test: /\.(mp3|wav)$/i, loader: 'file?name=audio/[name].[hash].[ext]' },
+			{ exclude: /node_modules/, test: /\.(mp4|mpe?g|ogv|wem)$/i, loader: 'file?name=video/[name].[hash].[ext]' },
 		]),
 	},
 	resolve: {
