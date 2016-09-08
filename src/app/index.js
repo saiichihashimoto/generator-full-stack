@@ -48,11 +48,12 @@ export default class AppGenerator extends Base {
 			});
 	}
 	writing() {
+		this.fs.copy(this.templatePath('../../../.codecov.yml'), this.destinationPath('.codecov.yml'));
 		this.fs.copy(this.templatePath('../../../.editorconfig'), this.destinationPath('.editorconfig'));
 		this.fs.copy(this.templatePath('../../../.eslintrc'), this.destinationPath('.eslintrc'));
 		this.fs.copy(this.templatePath('../../../.gitignore'), this.destinationPath('.gitignore'));
+		this.fs.copy(this.templatePath('../../../.travis.yml'), this.destinationPath('.travis.yml'));
 		this.fs.copy(this.templatePath('.babelrc'), this.destinationPath('.babelrc'));
-		this.fs.copy(this.templatePath('.travis.yml'), this.destinationPath('.travis.yml'));
 		this.fs.copy(this.templatePath('assets/images/logo.png'), this.destinationPath('assets/images/logo.png'));
 		this.fs.copyTpl(this.templatePath('Procfile.dev.ejs'), this.destinationPath('Procfile.dev'), Object.assign({}, this, this.options));
 		this.fs.copyTpl(this.templatePath('package.json.ejs'), this.destinationPath('package.json'), Object.assign({}, this, this.options));
