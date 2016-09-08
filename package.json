@@ -48,8 +48,7 @@
     },
     "ghooks": {
       "pre-commit": "npm run format && npm run lint",
-      "commit-msg": "validate-commit-msg",
-      "pre-push": "npm run lint && npm run test"
+      "commit-msg": "validate-commit-msg"
     },
     "validate-commit-msg": {
       "helpMessage": "Install commitizen and use `git cz` instead of `git commit` https://github.com/commitizen/cz-cli#installing-the-command-line-tool"

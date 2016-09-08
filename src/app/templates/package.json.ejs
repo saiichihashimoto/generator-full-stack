@@ -57,8 +57,7 @@
     "postrelease": "semantic-release post",
     "start": "if [ \"$NODE_ENV\" = 'production' ]; then foreman start; else foreman start -f Procfile.dev; fi",
     "test": "run-s test:*",
-    "test:unit": "istanbul cover -x *.test.js _mocha -- -R spec \"./{,!(node_modules)/**/}*.test.js\"",
-    "test:unit:no-cover": "mocha \"./{,!(node_modules)/**/}*.test.js\" --color -R nyan"
+    "test:unit": "istanbul cover -x *.test.js _mocha -- -R spec \"./{,!(node_modules)/**/}*.test.js\""
   },
   "config": {
     "commitizen": {
@@ -66,8 +65,7 @@
     },
     "ghooks": {
       "pre-commit": "npm run format && npm run lint",
-      "commit-msg": "validate-commit-msg",
-      "pre-push": "npm run lint && npm run test:unit:no-cover"
+      "commit-msg": "validate-commit-msg"
     },
     "validate-commit-msg": {
       "helpMessage": "Install commitizen and use `git cz` instead of `git commit` https://github.com/commitizen/cz-cli#installing-the-command-line-tool"
