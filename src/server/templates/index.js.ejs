@@ -46,6 +46,9 @@ feathers()
 	})
 	.use(raven.middleware.express.errorHandler(report))
 	.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+		if (!process.env.NODE_ENV) {
+			console.log(err);
+		}
 		err.message = err.message || 'Do not recognize url ' + req.path;
 		res.status(err.code || 500).json(err);
 	})
