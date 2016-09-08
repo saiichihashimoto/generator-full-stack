@@ -25,25 +25,33 @@
   "scripts": {
     "prebuild": "npm run clean",
     "build": "run-s build:*",
+<%_ if (platforms.includes('web')) { _%>
     "build:web": "NODE_ENV=production webpack -p",
-    "check": "run-s check:*",
-    "check:css": "stylelint \"**/*.css\" --color --ignore-path .gitignore",
-    "check:js": "eslint . --color --ignore-path .gitignore",
-    "check:json": "find . -name \\*.json | grep -v node_modules | xargs -n 1 jsonlint --quiet",
+<%_ } _%>
     "clean": "rm -rf dist && npm cache clean",
     "coverage:check": "istanbul check-coverage --statements 75 --branches 75 --functions 75 --lines 75",
     "coverage:report": "cat ./coverage/lcov.info | codecov",
     "format": "run-s format:*",
     "postformat": "git diff --staged --name-only --diff-filter=ACMRTUXB | xargs -n 1 git add",
+<%_ if (platforms.includes('web')) { _%>
     "format:css": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.css$\" | xargs -n 1 stylefmt --config .stylelintrc",
+<%_ } _%>
     "format:js": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.js$\" | xargs -n 1 eslint --fix --color",
     "format:json": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.json$\" | xargs -n 1 jsonlint --in-place",
     "format:package_json": "sort-package-json && git add package.json",
     "formatall": "run-s formatall:*",
+<%_ if (platforms.includes('web')) { _%>
     "formatall:css": "( find . -name \\*.css | grep -v node_modules | xargs -n 1 stylefmt --config .stylelintrc )",
+<%_ } _%>
     "formatall:js": "( find . -name \\*.js | grep -v node_modules | xargs -n 1 eslint --fix --color )",
     "formatall:json": "( find . -name \\*.json | grep -v node_modules | xargs -n 1 jsonlint --in-place )",
     "formatall:package_json": "sort-package-json",
+    "lint": "run-s lint:*",
+<%_ if (platforms.includes('web')) { _%>
+    "lint:css": "stylelint \"**/*.css\" --color --ignore-path .gitignore",
+<%_ } _%>
+    "lint:js": "eslint . --color --ignore-path .gitignore",
+    "lint:json": "find . -name \\*.json | grep -v node_modules | xargs -n 1 jsonlint --quiet",
     "prerelease": "semantic-release pre && npm run build",
     "release": "run-s release:*",
     "postrelease": "semantic-release post",
@@ -57,9 +65,9 @@
       "path": "./node_modules/cz-conventional-changelog"
     },
     "ghooks": {
-      "pre-commit": "npm run format && npm run check",
+      "pre-commit": "npm run format && npm run lint",
       "commit-msg": "validate-commit-msg",
-      "pre-push": "npm run check && npm run test:unit:no-cover"
+      "pre-push": "npm run lint && npm run test:unit:no-cover"
     },
     "validate-commit-msg": {
       "helpMessage": "Install commitizen and use `git cz` instead of `git commit` https://github.com/commitizen/cz-cli#installing-the-command-line-tool"
