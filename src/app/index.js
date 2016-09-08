@@ -57,6 +57,7 @@ export default class AppGenerator extends Base {
 						message: 'Application platforms',
 						name:    'platforms',
 						type:    'checkbox',
+						default: ['web', 'server'],
 						choices: [
 							{ name: 'Website', value: 'web' },
 							{ name: 'Server', value: 'server' },

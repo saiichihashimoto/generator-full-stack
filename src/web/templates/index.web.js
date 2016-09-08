@@ -25,7 +25,10 @@ if (stateElement) {
 }
 render(
 	<Provider store={createStore(state)}>
-		<Router history={browserHistory} routes={routes} />
+		<Router history={browserHistory} routes={routes} onUpdate={global.ga && function() {
+			global.ga('set', 'page', global.location.pathname + global.location.search + global.location.hash);
+			global.ga('send', 'pageview');
+		}} />
 	</Provider>,
 	global.document.getElementById('mount')
 );
