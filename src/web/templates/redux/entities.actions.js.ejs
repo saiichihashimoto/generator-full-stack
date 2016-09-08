@@ -1,15 +1,24 @@
+<%_ if (restful) { _%>
 import isArray from 'lodash.isarray';
+<%_ } _%>
 import pluralize from 'pluralize';
 import { arrayOf, normalize } from 'normalizr';
 import { createAction } from 'redux-actions';
 
+<%_ if (restful) { _%>
 import api from '../api';
+<%_ } _%>
 import schemas from '../entities/schemas.normalizr';
 
 const setEntity            = (type, entity) => createAction('SET_ENTITIES')(normalize(entity, schemas[type]));
 const setEntities          = (type, entities) => createAction('SET_ENTITIES')(normalize(entities, arrayOf(schemas[type])));
+<%_ if (restful) { _%>
 const setPaginatedEntities = (type, entities) => createAction('SET_ENTITIES')(normalize(entities, { data: arrayOf(schemas[type]) }));
+<%_ } _%>
+const removeEntity         = (type, entity) => createAction('REMOVE_ENTITIES')({ entities: { [type]: normalize(entity, schemas[type]).entities[type] } }); // FIXME
+const removeEntities       = (type, entities) => createAction('REMOVE_ENTITIES')({ entities: { [type]: normalize(entities, arrayOf(schemas[type])).entities[type] } }); // FIXME
 
+<%_ if (restful) { _%>
 export function getEntity(type, id, params) {
 	return (dispatch) => api.service('api/v1/' + type).get(id, params)
 		.then((result) => dispatch(setEntity(type, result)));
@@ -52,27 +61,67 @@ export function patchEntities(type, data, params) {
 
 export function deleteEntity(type, id, params) {
 	return (dispatch) => api.service('api/v1/' + type).remove(id, params)
-		.then((result) => dispatch(setEntity(type, result)));
+		.then((result) => dispatch(removeEntity(type, result)));
 }
 
 export function deleteEntities(type, params) {
 	return (dispatch) => api.service('api/v1/' + type).remove(null, params)
-		.then((result) => dispatch(setEntities(type, result)));
+		.then((result) => dispatch(removeEntities(type, result)));
 }
+<%_ } else { _%>
+export function createEntity(type, data) {
+	return (dispatch) => Promise.resolve(dispatch(setEntity(type, data)));
+}
+
+export function createEntities(type, data) {
+	return (dispatch) => Promise.resolve(dispatch(setEntities(type, data)));
+}
+
+export function updateEntity(type, id, data) {
+	return (dispatch) => Promise.resolve(dispatch(setEntity(type, Object.assign({}, data, { _id: id }))));
+}
+
+export function updateEntities(type, data) {
+	return (dispatch) => Promise.resolve(dispatch(setEntities(type, data)));
+}
+
+export function patchEntity(type, id, data) {
+	return (dispatch, getState) => {
+		return Promise.resolve(dispatch(setEntity(type, Object.assign({}, getState().entities[type][id] || {}, data, { _id: id }))));
+	};
+}
+
+export function patchEntities(type, data) {
+	return (dispatch, getState) => {
+		const state = getState();
+		return Promise.resolve(dispatch(setEntities(type, data.map((data) => Object.assign({}, state.entities[type][data.id] || {}, data)))));
+	};
+}
+
+export function deleteEntity(type, id) {
+	return (dispatch) => Promise.resolve(dispatch(removeEntity(type, { _id: id })));
+}
+
+export function deleteEntities() {
+	return () => Promise.reject(); // FIXME Not implemented
+}
+<%_ } _%>
 
 Object.keys(schemas).forEach((type) => {
 	const Type         = type.charAt(0).toUpperCase() + type.slice(1);
 	const typeSingular = pluralize(type, 1);
 	const TypeSingular = typeSingular.charAt(0).toUpperCase() + typeSingular.slice(1);
 
+<%_ if (restful) { _%>
 	module.exports['get' + TypeSingular] = (id, params) => getEntity(type, id, params);
 	module.exports['get' + Type] = (params) => getEntities(type, params);
+<%_ } _%>
 	module.exports['create' + TypeSingular] = (data, params) => createEntity(type, data, params);
 	module.exports['create' + Type] = (data, params) => createEntities(type, data, params);
 	module.exports['update' + TypeSingular] = (id, data, params) => updateEntity(type, id, data, params);
 	module.exports['update' + Type] = (data, params) => updateEntities(type, data, params);
 	module.exports['patch' + TypeSingular] = (id, data, params) => patchEntity(type, id, data, params);
 	module.exports['patch' + Type] = (data, params) => patchEntities(type, data, params);
-	module.exports['delete' + TypeSingular] = (id, params) => deleteEntity(type, id, params);
-	module.exports['delete' + Type] = (params) => deleteEntities(type, params);
+	module.exports['delete' + TypeSingular] = (id, params) => removeEntity(type, id, params);
+	module.exports['delete' + Type] = (params) => removeEntities(type, params);
 });

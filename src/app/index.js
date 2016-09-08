@@ -6,6 +6,7 @@ export default class AppGenerator extends Base {
 		super(...args);
 
 		this.argument('name', { desc: 'Package name', type: String, required: false });
+		this.option('restful', { desc: 'Include RESTful API', type: Boolean });
 	}
 	prompting() {
 		return Promise.resolve()
@@ -66,10 +67,11 @@ export default class AppGenerator extends Base {
 			})
 			.then(() => {
 				if (!this.options.platforms.includes('web')) {
+					this.options.renderOn = 'nowhere';
 					return;
 				}
 				return this.prompt(compact([
-					{
+					!this.options.renderOn && {
 						message: 'When document markup is rendered',
 						name:    'renderOn',
 						type:    'list',
@@ -79,6 +81,21 @@ export default class AppGenerator extends Base {
 							{ name: 'On build', value: 'build' },
 							{ name: 'On browser mount (not recommended)', value: 'mount' },
 						]),
+					},
+				]))
+				.then((answers) => Object.assign(this.options, answers));
+			})
+			.then(() => {
+				if (!this.options.platforms.includes('server')) {
+					this.options.restful = false;
+					return;
+				}
+				return this.prompt(compact([
+					(this.options.restful === undefined) && {
+						message: 'Include RESTful API',
+						name:    'restful',
+						type:    'confirm',
+						default: true,
 					},
 				]))
 				.then((answers) => Object.assign(this.options, answers));

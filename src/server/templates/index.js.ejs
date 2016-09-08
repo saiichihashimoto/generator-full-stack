@@ -8,9 +8,11 @@ import helmet from 'helmet';
 import raven from 'raven';
 import { NotFound } from 'feathers-errors';
 
+<%_ if (restful) { _%>
 import api from './api';
+<%_ } _%>
 <%_ if (renderOn === 'serve') { _%>
-import render from './web/render.middleware';;
+import render from './web/render.middleware';
 <%_ } _%>
 import report from './report';
 
@@ -31,8 +33,10 @@ feathers()
 	.set('views', './dist/web')
 	.use(render)
 <%_ } _%>
+<%_ if (restful) { _%>
 
 	.use('/api/v1', api)
+<%_ } _%>
 
 	.all('*', (req, res, next) => next(new NotFound('Path not found', { path: req.path })))
 

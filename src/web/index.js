@@ -5,11 +5,11 @@ export default class WebGenerator extends Base {
 	constructor(...args) {
 		super(...args);
 
-		this.option('renderOn', { type: String, desc: 'When the documents should be rendered (build/serve/mount)' });
+		this.option('renderOn', { desc: 'When document markup is rendered', type: String });
+		this.option('restful', { desc: 'Include RESTful API', type: Boolean });
 	}
 	writing() {
 		this.fs.copy(this.templatePath('../../../.stylelintrc'), this.destinationPath('.stylelintrc'));
-		this.fs.copy(this.templatePath('api/index.web.js'), this.destinationPath('api/index.web.js'));
 		this.fs.copy(this.templatePath('cmrh.conf.js'), this.destinationPath('cmrh.conf.js'));
 		this.fs.copy(this.templatePath('components/App/App.js'), this.destinationPath('components/App/App.js'));
 		this.fs.copy(this.templatePath('components/App/App.styles.css'), this.destinationPath('components/App/App.styles.css'));
@@ -25,16 +25,18 @@ export default class WebGenerator extends Base {
 		this.fs.copy(this.templatePath('redux/actions.web.js'), this.destinationPath('redux/actions.web.js'));
 		this.fs.copy(this.templatePath('redux/createStore.js'), this.destinationPath('redux/createStore.js'));
 		this.fs.copy(this.templatePath('redux/createStore.web.js'), this.destinationPath('redux/createStore.web.js'));
-		this.fs.copy(this.templatePath('redux/entities.actions.js'), this.destinationPath('redux/entities.actions.js'));
 		this.fs.copy(this.templatePath('redux/entities.reducer.js'), this.destinationPath('redux/entities.reducer.js'));
 		this.fs.copy(this.templatePath('report/index.web.js'), this.destinationPath('report/index.web.js'));
+		this.fs.copyTpl(this.templatePath('redux/entities.actions.js.ejs'), this.destinationPath('redux/entities.actions.js'), Object.assign({}, this, this.options));
 		this.fs.copyTpl(this.templatePath('webpack.config.babel.js.ejs'), this.destinationPath('webpack.config.babel.js'), Object.assign({}, this, this.options));
 		this.fs.write(this.destinationPath('.env.default'), '');
 
 		switch (this.options.renderOn) {
 			case 'build':
 			case 'mount':
-				this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
+				if (this.options.restful) {
+					this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
+				}
 				this.fs.copy(this.templatePath('web/index.web.ejs'), this.destinationPath('web/index.ejs'));
 				break;
 			case 'serve':
@@ -43,6 +45,10 @@ export default class WebGenerator extends Base {
 				break;
 			default:
 				break;
+		}
+
+		if (this.options.restful) {
+			this.fs.copy(this.templatePath('api/index.web.js'), this.destinationPath('api/index.web.js'));
 		}
 	}
 	installing() {
@@ -59,7 +65,7 @@ export default class WebGenerator extends Base {
 				break;
 		}
 		this.npmInstall(
-			[
+			compact([
 				'autoprefixer',
 				'babel-loader',
 				'babel-register',
@@ -76,8 +82,9 @@ export default class WebGenerator extends Base {
 				'json-loader',
 				'lodash.compact',
 				'lodash.head',
-				'lodash.isarray',
+				this.options.restful && 'lodash.isarray',
 				'lodash.mapvalues',
+				'lodash.omit',
 				'lodash.tail',
 				'normalizr',
 				'pluralize',
@@ -97,7 +104,7 @@ export default class WebGenerator extends Base {
 				'url-loader',
 				'webpack',
 				'webpack-dotenv-plugin',
-			],
+			]),
 			whereToSave
 		);
 
@@ -113,8 +120,8 @@ export default class WebGenerator extends Base {
 		}
 		this.npmInstall(
 			compact([
-				'feathers',
-				'feathers-rest',
+				this.options.restful && 'feathers',
+				this.options.restful && 'feathers-rest',
 				'raven-js',
 				'react-hot-loader@1.3.0',
 				(this.options.renderOn === 'build' || this.options.renderOn === 'mount') && 'react-router-to-array',
