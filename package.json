@@ -4,6 +4,9 @@
   "keywords": [
     "yeoman-generator"
   ],
+  "bugs": {
+    "url": "https://github.com/saiichihashimoto/generator-full-stack/issues"
+  },
   "files": [
     "generators/app"
   ],

@@ -5,37 +5,82 @@ export default class AppGenerator extends Base {
 	constructor(...args) {
 		super(...args);
 
-		this.argument('name', { type: String, desc: 'Package name' });
-		this.option('renderOn', { type: String, desc: 'When the documents should be rendered (build/serve/mount)' });
+		this.argument('name', { desc: 'Package name', type: String, required: false });
 	}
 	prompting() {
 		return Promise.resolve()
 			.then(() => {
-				return this.prompt([{
-					message: 'Platforms',
-					name:    'platforms',
-					type:    'checkbox',
-					choices: [
-						{ name: 'Website', value: 'web' },
-						{ name: 'Server', value: 'server' },
-					],
-				}])
+				return this.prompt(compact([
+					!this.name && {
+						message:  'Package name',
+						name:     'name',
+						type:     'input',
+						validate: (name) => {
+							if (name.length) {
+								return true;
+							}
+							return 'A package name is required.';
+						},
+					},
+					{
+						message: 'Package user (or organization)',
+						name:    'org',
+						type:    'input',
+					},
+					{
+						message: 'Package description',
+						name:    'description',
+						type:    'input',
+					},
+					{
+						message: 'Package homepage',
+						name:    'homepage',
+						type:    'input',
+					},
+					{
+						message: 'Package license',
+						name:    'license',
+						type:    'list',
+						default: 'MIT',
+						choices: [
+							{ name: 'MIT', value: 'MIT' },
+							{ name: 'None', value: null },
+						],
+					},
+				]))
+				.then((answers) => Object.assign(this, answers));
+			})
+			.then(() => {
+				return this.prompt([
+					{
+						message: 'Application platforms',
+						name:    'platforms',
+						type:    'checkbox',
+						choices: [
+							{ name: 'Website', value: 'web' },
+							{ name: 'Server', value: 'server' },
+						],
+					},
+				])
 				.then((answers) => Object.assign(this.options, answers));
 			})
 			.then(() => {
 				if (!this.options.platforms.includes('web')) {
 					return;
 				}
-				return this.prompt([!this.options.renderOn && {
-					message: 'Render on',
-					name:    'renderOn',
-					type:    'list',
-					choices: compact([
-						{ name: 'Build', value: 'build' },
-						this.options.platforms.includes('server') && { name: 'Serve', value: 'serve' },
-						{ name: 'Mount', value: 'mount' },
-					]),
-				}])
+				return this.prompt(compact([
+					{
+						message: 'When document markup is rendered',
+						name:    'renderOn',
+						type:    'list',
+						default: this.options.platforms.includes('server') ? 'serve' : 'build',
+						choices: compact([
+							this.options.platforms.includes('server') && { name: 'On server', value: 'serve' },
+							{ name: 'On build', value: 'build' },
+							{ name: 'On browser mount (not recommended)', value: 'mount' },
+						]),
+					},
+				]))
 				.then((answers) => Object.assign(this.options, answers));
 			})
 			.then(() => {

@@ -1,5 +1,27 @@
 {
   "name": "<%= name %>",
+<%_ if (description) { _%>
+  "description": "<%= description %>",
+<%_ } _%>
+<%_ if (homepage) { _%>
+  "homepage": "<%= homepage %>",
+<%_ } else if(org) { _%>
+  "homepage": "https://github.com/<%= org %>/<%= name %>",
+<%_ } _%>
+<%_ if (org) { _%>
+  "bugs": {
+    "url": "https://github.com/<%= org %>/<%= name %>/issues"
+  },
+<%_ } _%>
+<%_ if (license) { _%>
+  "license": "<%= license %>",
+<%_ } _%>
+<%_ if (org) { _%>
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/<%= org %>/<%= name %>.git"
+  },
+<%_ } _%>
   "scripts": {
     "prebuild": "npm run clean",
     "build": "run-s build:*",
