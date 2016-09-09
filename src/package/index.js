@@ -46,10 +46,9 @@ export default class PackageGenerator extends Base {
 	}
 	configuring() {
 		this.fs.copyTpl(this.templatePath('package.json.ejs'), this.destinationPath('package.json'), Object.assign({}, this, this.options));
-	}
-	install() {
 		this.npmInstall(
 			[
+				'npm-run-all',
 				'sort-package-json',
 			],
 			{ saveDev: true }
