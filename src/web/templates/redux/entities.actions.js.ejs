@@ -1,24 +1,24 @@
-<%_ if (restful) { _%>
+<%_ if (api) { _%>
 import isArray from 'lodash.isarray';
 <%_ } _%>
 import pluralize from 'pluralize';
 import { arrayOf, normalize } from 'normalizr';
 import { createAction } from 'redux-actions';
 
-<%_ if (restful) { _%>
+<%_ if (api) { _%>
 import api from '../api';
 <%_ } _%>
 import schemas from '../entities/schemas.normalizr';
 
 const setEntity            = (type, entity) => createAction('SET_ENTITIES')(normalize(entity, schemas[type]));
 const setEntities          = (type, entities) => createAction('SET_ENTITIES')(normalize(entities, arrayOf(schemas[type])));
-<%_ if (restful) { _%>
+<%_ if (api) { _%>
 const setPaginatedEntities = (type, entities) => createAction('SET_ENTITIES')(normalize(entities, { data: arrayOf(schemas[type]) }));
 <%_ } _%>
 const removeEntity         = (type, entity) => createAction('REMOVE_ENTITIES')({ entities: { [type]: normalize(entity, schemas[type]).entities[type] } }); // FIXME
 const removeEntities       = (type, entities) => createAction('REMOVE_ENTITIES')({ entities: { [type]: normalize(entities, arrayOf(schemas[type])).entities[type] } }); // FIXME
 
-<%_ if (restful) { _%>
+<%_ if (api) { _%>
 export function getEntity(type, id, params) {
 	return (dispatch) => api.service('api/v1/' + type).get(id, params)
 		.then((result) => dispatch(setEntity(type, result)));
@@ -112,7 +112,7 @@ Object.keys(schemas).forEach((type) => {
 	const typeSingular = pluralize(type, 1);
 	const TypeSingular = typeSingular.charAt(0).toUpperCase() + typeSingular.slice(1);
 
-<%_ if (restful) { _%>
+<%_ if (api) { _%>
 	module.exports['get' + TypeSingular] = (id, params) => getEntity(type, id, params);
 	module.exports['get' + Type] = (params) => getEntities(type, params);
 <%_ } _%>

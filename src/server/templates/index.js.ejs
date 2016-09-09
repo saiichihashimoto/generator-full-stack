@@ -1,4 +1,4 @@
-<%_ if (renderOn === 'serve') { _%>
+<%_ if (render === 'server') { _%>
 import 'css-modules-require-hook/preset';
 <%_ } _%>
 import bodyParser from 'body-parser';
@@ -8,10 +8,10 @@ import helmet from 'helmet';
 import raven from 'raven';
 import { NotFound } from 'feathers-errors';
 
-<%_ if (restful) { _%>
+<%_ if (api) { _%>
 import api from './api';
 <%_ } _%>
-<%_ if (renderOn === 'serve') { _%>
+<%_ if (render === 'server') { _%>
 import render from './web/render.middleware';
 <%_ } _%>
 import report from './report';
@@ -26,14 +26,14 @@ feathers()
 	.use(raven.middleware.express.requestHandler(report))
 
 	.use(feathers.static('dist/web', { index: false }))
-<%_ if (renderOn === 'serve') { _%>
+<%_ if (render === 'server') { _%>
 
 	.set('view engine', 'ejs')
 	.set('view options', { delimiter: '$' })
 	.set('views', './dist/web')
 	.use(render)
 <%_ } _%>
-<%_ if (restful) { _%>
+<%_ if (api) { _%>
 
 	.use('/api/v1', api)
 <%_ } _%>

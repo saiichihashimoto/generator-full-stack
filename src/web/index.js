@@ -2,15 +2,44 @@ import compact from 'lodash.compact';
 import { Base } from 'yeoman-generator';
 
 export default class WebGenerator extends Base {
-	constructor(...args) {
-		super(...args);
-
-		this.option('renderOn', { desc: 'When document markup is rendered', type: String });
-		this.option('restful', { desc: 'Include RESTful API', type: Boolean });
+	initializing() {
+		if (this.options.render === 'server') {
+			this.options = Object.assign({}, this.options, { deploy: null });
+		}
 	}
-	writing() {
+	prompting() {
+		return Promise.resolve()
+			.then(() => {
+				if (this.options.deploy !== undefined) {
+					return;
+				}
+				return this._prompt([{
+					message: 'Deploy',
+					name:    'deploy',
+					type:    'list',
+					default: 'gh-pages',
+					choices: [
+						{ name: 'Github Pages', value: 'gh-pages' },
+						{ name: 'Don\'t worry about it', value: null },
+					],
+				}]);
+			})
+			.then(() => {
+				switch (this.options.deploy) {
+					case 'gh-pages':
+						this.composeWith('full-stack:gh-pages', { options: Object.assign({}, this.options) });
+						break;
+					default:
+						break;
+				}
+			});
+	}
+	configuring() {
 		this.fs.copy(this.templatePath('../../../.stylelintrc'), this.destinationPath('.stylelintrc'));
 		this.fs.copy(this.templatePath('cmrh.conf.js'), this.destinationPath('cmrh.conf.js'));
+		this.fs.write(this.destinationPath('.env.default'), '');
+	}
+	writing() {
 		this.fs.copy(this.templatePath('components/App/App.js'), this.destinationPath('components/App/App.js'));
 		this.fs.copy(this.templatePath('components/App/App.styles.css'), this.destinationPath('components/App/App.styles.css'));
 		this.fs.copy(this.templatePath('components/Foo/Foo.js'), this.destinationPath('components/Foo/Foo.js'));
@@ -29,41 +58,36 @@ export default class WebGenerator extends Base {
 		this.fs.copy(this.templatePath('report/index.web.js'), this.destinationPath('report/index.web.js'));
 		this.fs.copyTpl(this.templatePath('redux/entities.actions.js.ejs'), this.destinationPath('redux/entities.actions.js'), Object.assign({}, this, this.options));
 		this.fs.copyTpl(this.templatePath('webpack.config.babel.js.ejs'), this.destinationPath('webpack.config.babel.js'), Object.assign({}, this, this.options));
-		this.fs.write(this.destinationPath('.env.default'), '');
+		this.fs.extendJSON(this.destinationPath('.eslintrc'), this.fs.readJSON(this.templatePath('.eslintrc')));
+		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json')));
+		this.fs.write(
+			this.destinationPath('.editorconfig'),
+			[this.fs.read(this.destinationPath('.editorconfig'), { defaults: '' }), this.fs.read(this.templatePath('.editorconfig'))].join('\n\n').replace(/\n\n+/, '\n\n')
+		);
+		this.fs.write(
+			this.destinationPath('Procfile.dev'),
+			[this.fs.read(this.destinationPath('Procfile.dev'), { defaults: '' }), this.fs.read(this.templatePath('Procfile.dev'))].join('\n').replace(/\n+/, '\n')
+		);
 
-		switch (this.options.renderOn) {
-			case 'build':
-			case 'mount':
-				if (this.options.restful) {
+		switch (this.options.render) {
+			case 'server':
+				this.fs.copy(this.templatePath('web/index.ejs'), this.destinationPath('web/index.ejs'));
+				this.fs.copy(this.templatePath('web/render.middleware.js'), this.destinationPath('web/render.middleware.js'));
+				break;
+			case 'web':
+			default:
+				if (this.options.api) {
 					this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
 				}
 				this.fs.copy(this.templatePath('web/index.web.ejs'), this.destinationPath('web/index.ejs'));
 				break;
-			case 'serve':
-				this.fs.copy(this.templatePath('web/index.ejs'), this.destinationPath('web/index.ejs'));
-				this.fs.copy(this.templatePath('web/render.middleware.js'), this.destinationPath('web/render.middleware.js'));
-				break;
-			default:
-				break;
 		}
 
-		if (this.options.restful) {
+		if (this.options.api) {
 			this.fs.copy(this.templatePath('api/index.web.js'), this.destinationPath('api/index.web.js'));
 		}
 	}
-	installing() {
-		let whereToSave;
-		switch (this.options.renderOn) {
-			case 'build':
-			case 'mount':
-				whereToSave = { saveDev: true };
-				break;
-			case 'serve':
-				whereToSave = { save: true };
-				break;
-			default:
-				break;
-		}
+	install() {
 		this.npmInstall(
 			compact([
 				'autoprefixer',
@@ -82,7 +106,7 @@ export default class WebGenerator extends Base {
 				'json-loader',
 				'lodash.compact',
 				'lodash.head',
-				this.options.restful && 'lodash.isarray',
+				this.options.api && 'lodash.isarray',
 				'lodash.mapvalues',
 				'lodash.omit',
 				'lodash.tail',
@@ -105,10 +129,10 @@ export default class WebGenerator extends Base {
 				'webpack',
 				'webpack-dotenv-plugin',
 			]),
-			whereToSave
+			(this.options.render === 'server') ? { save: true } : { saveDev: true }
 		);
 
-		if (this.options.renderOn === 'serve') {
+		if (this.options.render === 'server') {
 			this.npmInstall(
 				[
 					'clean-webpack-plugin',
@@ -120,11 +144,12 @@ export default class WebGenerator extends Base {
 		}
 		this.npmInstall(
 			compact([
-				this.options.restful && 'feathers',
-				this.options.restful && 'feathers-rest',
+				'eslint-plugin-react',
+				this.options.api && 'feathers',
+				this.options.api && 'feathers-rest',
 				'raven-js',
 				'react-hot-loader@1.3.0',
-				(this.options.renderOn === 'build' || this.options.renderOn === 'mount') && 'react-router-to-array',
+				(this.options.render === 'web' || !this.options.render) && 'react-router-to-array',
 				'stylefmt',
 				'stylelint',
 				'stylelint-config-standard',
@@ -132,5 +157,10 @@ export default class WebGenerator extends Base {
 			]),
 			{ saveDev: true }
 		);
+	}
+	_prompt(prompts) {
+		return this.prompt(prompts).then((answers) => {
+			this.options = Object.assign({}, this.options, answers);
+		});
 	}
 }
