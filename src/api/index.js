@@ -29,6 +29,21 @@ export default class APIGenerator extends Base {
 			});
 	}
 	writing() {
+		if (this.options.web) {
+			if (!this.options.server && this.options.render !== 'server') {
+				this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.stub.js'));
+			}
+
+			this.fs.copy(this.templatePath('api/index.web.js'), this.destinationPath('api/index.web.js'));
+			this.npmInstall(
+				[
+					'feathers',
+					'feathers-rest',
+				],
+				{ saveDev: true }
+			);
+		}
+
 		if (this.options.server) {
 			this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
 			this.npmInstall(
@@ -45,21 +60,6 @@ export default class APIGenerator extends Base {
 					'feathers-memory',
 				],
 				{ save: true }
-			);
-		}
-
-		if (this.options.web) {
-			if (!this.options.server && this.options.render !== 'server') {
-				this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.stub.js'));
-			}
-
-			this.fs.copy(this.templatePath('api/index.web.js'), this.destinationPath('api/index.web.js'));
-			this.npmInstall(
-				[
-					'feathers',
-					'feathers-rest',
-				],
-				{ saveDev: true }
 			);
 		}
 	}
