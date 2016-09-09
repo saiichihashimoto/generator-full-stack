@@ -28,11 +28,40 @@ export default class APIGenerator extends Base {
 				}
 			});
 	}
-	configuring() {
-		this.log('api:configuring'); // TODO
-	}
 	writing() {
-		this.log('api:writing'); // TODO
+		if (this.options.server) {
+			this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
+			this.npmInstall(
+				[
+					'feathers',
+					'feathers-rest',
+				],
+				{ save: true }
+			);
+
+			this.fs.copy(this.templatePath('entities/foos/service.js'), this.destinationPath('entities/foos/service.js'));
+			this.npmInstall(
+				[
+					'feathers-memory',
+				],
+				{ save: true }
+			);
+		}
+
+		if (this.options.web) {
+			if (!this.options.server && this.options.render !== 'server') {
+				this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.stub.js'));
+			}
+
+			this.fs.copy(this.templatePath('api/index.web.js'), this.destinationPath('api/index.web.js'));
+			this.npmInstall(
+				[
+					'feathers',
+					'feathers-rest',
+				],
+				{ saveDev: true }
+			);
+		}
 	}
 	_prompt(prompts) {
 		return this.prompt(prompts).then((answers) => {

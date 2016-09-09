@@ -31,35 +31,37 @@ export default class ServerGenerator extends Base {
 	}
 	configuring() {
 		this.fs.copy(this.templatePath('Procfile'), this.destinationPath('Procfile'));
-		this.fs.write(
-			this.destinationPath('Procfile.dev'),
-			[this.fs.read(this.templatePath('Procfile.dev')), this.fs.read(this.destinationPath('Procfile.dev'), { defaults: '' })].join('\n').replace(/\n+/, '\n')
-		);
-	}
-	writing() {
-		this.fs.copy(this.templatePath('report/index.js'), this.destinationPath('report/index.js'));
-		this.fs.copyTpl(this.templatePath('index.js.ejs'), this.destinationPath('index.js'), Object.assign({}, this, this.options));
-
-		if (this.options.api) {
-			this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
-			this.fs.copy(this.templatePath('entities/foos/service.js'), this.destinationPath('entities/foos/service.js'));
-		}
-	}
-	install() {
 		this.npmInstall(
 			compact([
 				'babel-cli',
+			]),
+			{ save: true }
+		);
+
+		this.fs.copy(this.templatePath('report/index.js'), this.destinationPath('report/index.js'));
+		this.npmInstall(
+			compact([
+				'raven',
+			]),
+			{ save: true }
+		);
+
+		this.fs.copyTpl(this.templatePath('index.js.ejs'), this.destinationPath('index.js'), Object.assign({}, this, this.options));
+		this.npmInstall(
+			compact([
 				'body-parser',
 				'compression',
 				'feathers',
 				'feathers-errors',
-				this.options.api && 'feathers-memory',
-				this.options.api && 'feathers-rest',
 				'helmet',
-				'raven',
-				'require-all',
 			]),
 			{ save: true }
+		);
+	}
+	writing() {
+		this.fs.write(
+			this.destinationPath('Procfile.dev'),
+			[this.fs.read(this.templatePath('Procfile.dev')), this.fs.read(this.destinationPath('Procfile.dev'))].join('\n').replace(/\n+/, '\n')
 		);
 		this.npmInstall(
 			[

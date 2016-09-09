@@ -88,16 +88,31 @@ export default class AppGenerator extends Base {
 		this.fs.copy(this.templatePath('../../../.codecov.yml'), this.destinationPath('.codecov.yml'));
 		this.fs.copy(this.templatePath('../../../.gitignore'), this.destinationPath('.gitignore'));
 		this.fs.copy(this.templatePath('../../../.travis.yml'), this.destinationPath('.travis.yml'));
-		this.fs.copy(this.templatePath('.babelrc'), this.destinationPath('.babelrc'));
 		this.fs.copy(this.templatePath('.editorconfig'), this.destinationPath('.editorconfig'));
-		this.fs.copy(this.templatePath('.eslintrc'), this.destinationPath('.eslintrc'));
+		this.fs.copy(this.templatePath('assets/images/logo.png'), this.destinationPath('assets/images/logo.png'));
 		this.fs.write(this.destinationPath('.env'), '');
 		this.fs.write(this.destinationPath('Procfile.dev'), '');
-	}
-	writing() {
-		this.fs.copy(this.templatePath('assets/images/logo.png'), this.destinationPath('assets/images/logo.png'));
-	}
-	install() {
+		this.npmInstall(
+			[
+				'chai',
+				'chai-as-promised',
+				'codecov.io',
+				'cz-conventional-changelog',
+				'ghooks',
+				'istanbul',
+				'jsonlint',
+				'last-release-github',
+				'mocha',
+				'nock',
+				'semantic-release',
+				'sinon',
+				'sinon-chai',
+				'validate-commit-msg',
+			],
+			{ saveDev: true }
+		);
+
+		this.fs.copy(this.templatePath('.babelrc'), this.destinationPath('.babelrc'));
 		this.npmInstall(
 			[
 				'babel-core',
@@ -107,27 +122,14 @@ export default class AppGenerator extends Base {
 			],
 			{ save: true }
 		);
+
+		this.fs.copy(this.templatePath('.eslintrc'), this.destinationPath('.eslintrc'));
 		this.npmInstall(
 			[
 				'babel-eslint',
-				'chai',
-				'chai-as-promised',
-				'codecov.io',
-				'cz-conventional-changelog',
 				'eslint',
 				'eslint-config-xo',
 				'eslint-plugin-babel',
-				'ghooks',
-				'istanbul',
-				'jsonlint',
-				'last-release-github',
-				'mocha',
-				'nock',
-				'npm-run-all',
-				'semantic-release',
-				'sinon',
-				'sinon-chai',
-				'validate-commit-msg',
 			],
 			{ saveDev: true }
 		);

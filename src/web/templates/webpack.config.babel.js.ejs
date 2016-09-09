@@ -33,9 +33,9 @@ import { renderToString } from 'react-dom/server';
 <%_ } _%>
 <%_ if (render !== 'server') { _%>
 
-<%_ if (render === 'web') { _%>
+	<%_ if (render === 'web') { _%>
 import createStore from './redux/createStore';
-<%_ } _%>
+	<%_ } _%>
 import routes from './components/routes';
 <%_ } _%>
 
@@ -113,15 +113,16 @@ export default {
 			new WriteFilePlugin({ log: false }),
 <%_ } _%>
 		]
-<%_ if (render === 'web') { _%>
+<%_ if (render !== 'server') { _%>
 		.concat(reactRouterToArray(routes).map((route) => {
-			// HACK Using react-router's zalgo-ed match
-			// - Discussion about it being zalgo-ed: https://github.com/reactjs/react-router/issues/1777#issuecomment-148415982
-			// - Why it's bad: http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony
+	<%_ if (render === 'web') { _%>
 			let error            = 'nope';
 			let redirectLocation = 'nope';
 			let renderProps      = 'nope';
 			match({ routes: routes, location: route }, (matchError, matchRedirectLocation, matchRenderProps) => {
+				// HACK Using react-router's zalgo-ed match
+				// - Discussion about it being zalgo-ed: https://github.com/reactjs/react-router/issues/1777#issuecomment-148415982
+				// - Why it's bad: http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony
 				error = matchError;
 				redirectLocation = matchRedirectLocation;
 				renderProps = matchRenderProps;
@@ -139,7 +140,7 @@ export default {
 			}
 			const store = createStore();
 			const html  = renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>);
-			const head  = Helmet.rewind();
+			const head  = Helmet.rewind(); // HAS TO be AFTER the renderToString https://github.com/nfl/react-helmet#server-usage
 
 			return new HtmlWebpackPlugin({
 				filename:        (route + '/index.html').replace(/\/+/, ''),
@@ -154,15 +155,14 @@ export default {
 				style:           head.style.toString(),
 				script:          head.script.toString(),
 			});
-		}))
-<%_ } else if (!render) { _%>
-		.concat(reactRouterToArray(routes).map((route) => {
+	<%_ } else if (!render) { _%>
 			return new HtmlWebpackPlugin({
 				filename:        (route + '/index.html').replace(/\/+/, ''),
 				template:        'ejs-compiled!./web/index.ejs',
 				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
 				title:           '<title>' + process.env.npm_package_name + '</title>',
 			});
+	<%_ } _%>
 		}))
 <%_ } _%>
 	),

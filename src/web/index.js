@@ -37,9 +37,6 @@ export default class WebGenerator extends Base {
 	configuring() {
 		this.fs.copy(this.templatePath('../../../.stylelintrc'), this.destinationPath('.stylelintrc'));
 		this.fs.copy(this.templatePath('cmrh.conf.js'), this.destinationPath('cmrh.conf.js'));
-		this.fs.write(this.destinationPath('.env.default'), '');
-	}
-	writing() {
 		this.fs.copy(this.templatePath('components/App/App.js'), this.destinationPath('components/App/App.js'));
 		this.fs.copy(this.templatePath('components/App/App.styles.css'), this.destinationPath('components/App/App.styles.css'));
 		this.fs.copy(this.templatePath('components/Foo/Foo.js'), this.destinationPath('components/Foo/Foo.js'));
@@ -58,15 +55,21 @@ export default class WebGenerator extends Base {
 		this.fs.copy(this.templatePath('report/index.web.js'), this.destinationPath('report/index.web.js'));
 		this.fs.copyTpl(this.templatePath('redux/entities.actions.js.ejs'), this.destinationPath('redux/entities.actions.js'), Object.assign({}, this, this.options));
 		this.fs.copyTpl(this.templatePath('webpack.config.babel.js.ejs'), this.destinationPath('webpack.config.babel.js'), Object.assign({}, this, this.options));
+		this.fs.write(this.destinationPath('.env.default'), '');
+	}
+	writing() {
 		this.fs.extendJSON(this.destinationPath('.eslintrc'), this.fs.readJSON(this.templatePath('.eslintrc')));
+
 		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json')));
+
 		this.fs.write(
 			this.destinationPath('.editorconfig'),
-			[this.fs.read(this.destinationPath('.editorconfig'), { defaults: '' }), this.fs.read(this.templatePath('.editorconfig'))].join('\n\n').replace(/\n\n+/, '\n\n')
+			[this.fs.read(this.destinationPath('.editorconfig')), this.fs.read(this.templatePath('.editorconfig'))].join('\n\n').replace(/\n\n+/, '\n\n')
 		);
+
 		this.fs.write(
 			this.destinationPath('Procfile.dev'),
-			[this.fs.read(this.destinationPath('Procfile.dev'), { defaults: '' }), this.fs.read(this.templatePath('Procfile.dev'))].join('\n').replace(/\n+/, '\n')
+			[this.fs.read(this.destinationPath('Procfile.dev')), this.fs.read(this.templatePath('Procfile.dev'))].join('\n').replace(/\n+/, '\n')
 		);
 
 		switch (this.options.render) {
@@ -76,15 +79,8 @@ export default class WebGenerator extends Base {
 				break;
 			case 'web':
 			default:
-				if (this.options.api) {
-					this.fs.copy(this.templatePath('api/index.js'), this.destinationPath('api/index.js'));
-				}
 				this.fs.copy(this.templatePath('web/index.web.ejs'), this.destinationPath('web/index.ejs'));
 				break;
-		}
-
-		if (this.options.api) {
-			this.fs.copy(this.templatePath('api/index.web.js'), this.destinationPath('api/index.web.js'));
 		}
 	}
 	install() {
