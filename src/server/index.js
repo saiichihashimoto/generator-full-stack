@@ -1,4 +1,3 @@
-import compact from 'lodash.compact';
 import { Base } from 'yeoman-generator';
 
 export default class ServerGenerator extends Base {
@@ -32,31 +31,39 @@ export default class ServerGenerator extends Base {
 	configuring() {
 		this.fs.copy(this.templatePath('Procfile'), this.destinationPath('Procfile'));
 		this.npmInstall(
-			compact([
+			[
 				'babel-cli',
-			]),
+			],
 			{ save: true }
 		);
 
 		this.fs.copy(this.templatePath('report/index.js'), this.destinationPath('report/index.js'));
 		this.npmInstall(
-			compact([
+			[
 				'raven',
-			]),
+			],
 			{ save: true }
 		);
 
 		this.fs.copyTpl(this.templatePath('index.js.ejs'), this.destinationPath('index.js'), Object.assign({}, this, this.options));
 		this.npmInstall(
-			compact([
+			[
 				'body-parser',
 				'compression',
 				'feathers',
 				'feathers-errors',
 				'helmet',
-			]),
+			],
 			{ save: true }
 		);
+		if (this.options.render === 'server') {
+			this.npmInstall(
+				[
+					'ejs',
+				],
+				{ save: true }
+			);
+		}
 	}
 	writing() {
 		this.fs.write(
