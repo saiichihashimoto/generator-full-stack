@@ -1,11 +1,15 @@
 import Helmet from 'react-helmet';
 import React from 'react';
 import { GeneralError } from 'feathers-errors';
+<%_ if (state === 'redux') { _%>
 import { Provider } from 'react-redux';
+<%_ } _%>
 import { RouterContext, match } from 'react-router';
 import { renderToString } from 'react-dom/server';
 
+<%_ if (state === 'redux') { _%>
 import createStore from '../redux/createStore';
+<%_ } _%>
 import routes from '../components/routes';
 
 export default function(req, res, next) {
@@ -16,13 +20,19 @@ export default function(req, res, next) {
 			res.redirect(302, redirectLocation.pathname + redirectLocation.search);
 		} else if (renderProps) {
 			try {
+<%_ if (state === 'redux') { _%>
 				const store = createStore();
 				const html  = renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>);
+<%_ } else { _%>
+				const html  = renderToString(<RouterContext {...renderProps} />);
+<%_ } _%>
 				const head  = Helmet.rewind();
 
 				res.render('index', {
 					html:           html,
+<%_ if (state === 'redux') { _%>
 					state:          JSON.stringify(store.getState()),
+<%_ } _%>
 					htmlAttributes: head.htmlAttributes.toString(),
 					title:          head.title.toString(),
 					meta:           head.meta.toString(),
