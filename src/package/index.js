@@ -8,29 +8,6 @@ export default class PackageGenerator extends Base {
 
 		this.argument('name', { type: String, required: false });
 	}
-	initializing() {
-		return this._spawn('git', ['config', '--get', 'remote.origin.url'])
-			.then((repo) => {
-				if (!repo) {
-					return;
-				}
-				const match = repo.match(/git@(.+):(.+)\/(.+)\.git/);
-				if (!match) {
-					this.options.repository = repo;
-					return;
-				}
-				this.options.name = this.options.name || match[3];
-				this.options.org = this.options.org || match[2];
-				if (match[1] === 'github.com') {
-					this.options.homepage = this.options.homepage || ('https://github.com/' + match[2] + '/' + match[3]);
-					this.options.repository = this.options.repository || ('git+https://github.com/' + match[2] + '/' + match[3] + '.git');
-				}
-			})
-			.catch(() => {
-				this.spawnCommand('git', ['init']);
-				this.didntHaveGit = true;
-			});
-	}
 	prompting() {
 		return this._prompt(compact([
 			!this.options.name && {
@@ -73,13 +50,8 @@ export default class PackageGenerator extends Base {
 		]));
 	}
 	configuring() {
-		let promise = Promise.resolve();
-
-		if (this.didntHaveGit && this.options.repository) {
-			promise = promise.then(() => this._spawn('git', ['remote', 'add', 'origin', this.options.repository]));
-		}
-
 		this.fs.copyTpl(this.templatePath('package.json.ejs'), this.destinationPath('package.json'), Object.assign({}, this, this.options));
+
 		this.npmInstall(
 			[
 				'npm-run-all',
@@ -87,12 +59,6 @@ export default class PackageGenerator extends Base {
 			],
 			{ saveDev: true }
 		);
-
-		return promise;
-	}
-	end() {
-		return this._spawn('git', ['add', '.'])
-			.then(() => this._spawn('git', ['commit', '-m', 'chore(package): Initialize package using generator-full-stack']));
 	}
 	_prompt(prompts) {
 		return this.prompt(prompts).then((answers) => {

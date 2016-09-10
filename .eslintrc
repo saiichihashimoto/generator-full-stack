@@ -12,7 +12,7 @@
   },
   "rules": {
     "babel/arrow-parens": [2, "always"],
-    "babel/new-cap": [2, { "newIsCapExceptions": ["require"] }],
+    "babel/new-cap": [2, { "newIsCapExceptions": ["require"], "capIsNew": false }],
     "babel/object-curly-spacing": 0,
     "babel/object-shorthand": 0,
     "comma-dangle": [2, "always-multiline"],
@@ -21,7 +21,6 @@
       "beforeColon": false,
       "afterColon": true
     }],
-    "new-cap": 0,
     "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
     "no-multi-spaces": [2, { "exceptions": { "VariableDeclarator": true } }],
     "no-new-require": 0,
