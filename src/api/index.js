@@ -19,12 +19,8 @@ export default class APIGenerator extends Base {
 				}]);
 			})
 			.then(() => {
-				switch (this.options.state) {
-					case 'redux':
-						this.composeWith('full-stack:redux', { options: Object.assign({}, this.options) });
-						break;
-					default:
-						break;
+				if (this.options.state) {
+					this.composeWith('full-stack:' + this.options.state, { options: Object.assign({}, this.options) });
 				}
 			});
 	}

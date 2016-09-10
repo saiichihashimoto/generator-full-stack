@@ -24,12 +24,8 @@ export default class WebGenerator extends Base {
 				}]);
 			})
 			.then(() => {
-				switch (this.options.deploy) {
-					case 'gh-pages':
-						this.composeWith('full-stack:gh-pages', { options: Object.assign({}, this.options) });
-						break;
-					default:
-						break;
+				if (this.options.deploy) {
+					this.composeWith('full-stack:' + this.options.deploy, { options: Object.assign({}, this.options) });
 				}
 			});
 	}

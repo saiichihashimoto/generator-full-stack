@@ -19,12 +19,8 @@ export default class ServerGenerator extends Base {
 				}]);
 			})
 			.then(() => {
-				switch (this.options.deploy) {
-					case 'heroku':
-						this.composeWith('full-stack:heroku', { options: Object.assign({}, this.options) });
-						break;
-					default:
-						break;
+				if (this.options.deploy) {
+					this.composeWith('full-stack:' + this.options.deploy, { options: Object.assign({}, this.options) });
 				}
 			});
 	}
