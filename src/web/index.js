@@ -98,14 +98,14 @@ export default class WebGenerator extends Base {
 		this.fs.copyTpl(this.templatePath('index.web.js.ejs'), this.destinationPath('index.web.js'), Object.assign({}, this, this.options));
 		this.fs.extendJSON(this.destinationPath('.babelrc'), this.fs.readJSON(this.templatePath('.babelrc')));
 		this.fs.extendJSON(this.destinationPath('.eslintrc'), this.fs.readJSON(this.templatePath('.eslintrc')));
-		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json')));
+		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json' + ((this.options.render === 'server') ? '' : '.render'))));
 		this.fs.write(
 			this.destinationPath('.editorconfig'),
 			[this.fs.read(this.destinationPath('.editorconfig')), this.fs.read(this.templatePath('.editorconfig'))].join('\n\n').replace(/\n{3,}/, '\n\n')
 		);
 		this.fs.write(
 			this.destinationPath('Procfile.dev'),
-			[this.fs.read(this.destinationPath('Procfile.dev')), this.fs.read(this.templatePath('Procfile.dev'))].join('\n').replace(/\n{2,}/, '\n')
+			[this.fs.read(this.destinationPath('Procfile.dev')), this.fs.read(this.templatePath('Procfile.dev' + ((this.options.render === 'server') ? '' : '.render')))].join('\n').replace(/\n{2,}/, '\n').trim()
 		);
 
 		switch (this.options.render) {

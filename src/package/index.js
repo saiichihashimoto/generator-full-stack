@@ -65,27 +65,4 @@ export default class PackageGenerator extends Base {
 			this.options = Object.assign({}, this.options, answers);
 		});
 	}
-	_spawn(command, args, opt) {
-		return new Promise((resolve, reject) => {
-			const spawn = this.spawnCommand(command, args, Object.assign({ stdio: 'pipe' }, opt));
-			let error = '';
-			let value = '';
-
-			spawn.stderr.on('data', (data) => {
-				error += data.toString();
-			});
-
-			spawn.stdout.on('data', (data) => {
-				value += data.toString();
-			});
-
-			spawn.on('close', (code) => {
-				if (code) {
-					reject(error);
-				} else {
-					resolve(value);
-				}
-			});
-		});
-	}
 }

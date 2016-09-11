@@ -51,7 +51,7 @@ export default {
 		filename:      'js/[name].[hash].js',
 		publicPath:    '/',
 <%_ if (render === 'server') { _%>
-		libraryTarget: (process.env.BABEL_ENV === 'node') ? 'commonjs2' : 'var',
+		libraryTarget: (process.env.BABEL_ENV === 'transform-css-modules') ? 'commonjs2' : 'var',
 <%_ } _%>
 	},
 	module: {

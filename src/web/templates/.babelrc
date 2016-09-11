@@ -1,6 +1,6 @@
 {
   "env": {
-    "node": {
+    "transform-css-modules": {
       "plugins": [
         ["css-modules-transform", {
           "camelCase": true,
