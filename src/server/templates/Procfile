@@ -1,1 +1,1 @@
-web: babel-node index
+web: BABEL_ENV=node babel-node index

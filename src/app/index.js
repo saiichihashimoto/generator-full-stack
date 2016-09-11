@@ -59,7 +59,7 @@ export default class AppGenerator extends Base {
 						}])
 							.then(() => {
 								if (this.options.render === 'server') {
-									this.options = Object.assign({}, this.options, { server: null });
+									this.options = Object.assign({}, this.options, { server: true });
 								}
 							});
 					});
@@ -109,9 +109,6 @@ export default class AppGenerator extends Base {
 			.then(() => {
 				if (this.options.web) {
 					this.composeWith('full-stack:web', { options: Object.assign({}, this.options) });
-				}
-				if (this.options.render) {
-					this.composeWith('full-stack:render', { options: Object.assign({}, this.options) });
 				}
 				if (this.options.server) {
 					this.composeWith('full-stack:server', { options: Object.assign({}, this.options) });

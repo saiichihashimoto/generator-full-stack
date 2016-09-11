@@ -1,6 +1,3 @@
-<%_ if (render !== 'server') { _%>
-import 'css-modules-require-hook/preset';
-<%_ } _%>
 import BellOnBundlerErrorPlugin from 'bell-on-bundler-error-plugin';
 <%_ if (render === 'server') { _%>
 import CleanWebpackPlugin from 'clean-webpack-plugin';
@@ -43,16 +40,19 @@ import createStore from './redux/createStore';
 import routes from './components/routes';
 <%_ } _%>
 
-const cssLoaders = ['style', 'css?-autoprefixer&importLoaders=1&camelCase&modules&localIdentName=[name]---[local]', 'postcss'];
+const cssLoaders = ['style', 'css?-autoprefixer&importLoaders=1&camelCase&modules&localIdentName=[name]---[local]---[hash:base64:5]', 'postcss'];
 
 export default {
 	entry: {
 		index: '.',
 	},
 	output: {
-		path:       'dist/web',
-		filename:   'js/[name].[hash].js',
-		publicPath: '/',
+		path:          'dist/web',
+		filename:      'js/[name].[hash].js',
+		publicPath:    '/',
+<%_ if (render === 'server') { _%>
+		libraryTarget: (process.env.BABEL_ENV === 'node') ? 'commonjs2' : 'var',
+<%_ } _%>
 	},
 	module: {
 		loaders: compact([
