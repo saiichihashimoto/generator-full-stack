@@ -26,6 +26,7 @@ export default class APIGenerator extends Base {
 					'feathers',
 					'feathers-memory',
 					'feathers-rest',
+					'require-all',
 				],
 				{ save: true }
 			);
