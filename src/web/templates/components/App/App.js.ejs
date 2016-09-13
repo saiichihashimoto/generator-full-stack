@@ -1,8 +1,22 @@
 import React, { Component } from 'react';
+<%_ if (state === 'redux') { _%>
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+<%_ } _%>
 
+<%_ if (state === 'redux') { _%>
+import actions from '../../redux/actions';
+<%_ } _%>
 import styles from './App.styles';
 
-export default class App extends Component {
+export default <% if (state === 'redux') { %>
+connect(
+	createSelector(
+		(state) => state.entities,
+		(entities) => entities,
+	),
+	actions
+)(<% } %>class App extends Component {
 	static propTypes = {
 		children: React.PropTypes.node.isRequired,
 <%_ if (state === 'redux') { _%>
@@ -16,4 +30,4 @@ export default class App extends Component {
 			</div>
 		);
 	}
-}
+}<% if (state === 'redux') { %>);<% } %>

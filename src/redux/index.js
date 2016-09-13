@@ -11,7 +11,6 @@ export default class ReduxGenerator extends Base {
 		this.fs.copyTpl(this.templatePath('redux/entities.actions.js.ejs'), this.destinationPath('redux/entities.actions.js'), Object.assign({}, this, this.options));
 
 		if (this.options.web) {
-			this.fs.copy(this.templatePath('components/ConnectRedux/ConnectRedux.js'), this.destinationPath('components/ConnectRedux/ConnectRedux.js'));
 			this.fs.copy(this.templatePath('redux/actions.web.js'), this.destinationPath('redux/actions.web.js'));
 			this.fs.copy(this.templatePath('redux/createStore.web.js'), this.destinationPath('redux/createStore.web.js'));
 		}
