@@ -21,52 +21,82 @@ const removeEntities       = (type, entities) => createAction('REMOVE_ENTITIES')
 <%_ if (api) { _%>
 export function getEntity(type, id, params) {
 	return (dispatch) => api.service('api/v1/' + type).get(id, params)
-		.then((result) => dispatch(setEntity(type, result)));
+		.then((result) => {
+			dispatch(setEntity(type, result));
+			return result;
+		});
 }
 
 export function getEntities(type, params) {
 	return (dispatch) => api.service('api/v1/' + type).find(params)
-		.then((result) => dispatch(isArray(result) ? setEntities(type, result) : setPaginatedEntities(type, result)));
+		.then((result) => {
+			dispatch(isArray(result) ? setEntities(type, result) : setPaginatedEntities(type, result));
+			return result;
+		});
 }
 
 export function createEntity(type, data, params) {
 	return (dispatch) => api.service('api/v1/' + type).create(data, params)
-		.then((result) => dispatch(setEntity(type, result)));
+		.then((result) => {
+			dispatch(setEntity(type, result));
+			return result;
+		});
 }
 
 export function createEntities(type, data, params) {
 	return (dispatch) => api.service('api/v1/' + type).create(data, params)
-		.then((result) => dispatch(setEntities(type, result)));
+		.then((result) => {
+			dispatch(setEntities(type, result));
+			return result;
+		});
 }
 
 export function updateEntity(type, id, data, params) {
 	return (dispatch) => api.service('api/v1/' + type).update(id, data, params)
-		.then((result) => dispatch(setEntity(type, result)));
+		.then((result) => {
+			dispatch(setEntity(type, result));
+			return result;
+		});
 }
 
 export function updateEntities(type, data, params) {
 	return (dispatch) => api.service('api/v1/' + type).update(null, data, params)
-		.then((result) => dispatch(setEntities(type, result)));
+		.then((result) => {
+			dispatch(setEntities(type, result));
+			return result;
+		});
 }
 
 export function patchEntity(type, id, data, params) {
 	return (dispatch) => api.service('api/v1/' + type).patch(id, data, params)
-		.then((result) => dispatch(setEntity(type, result)));
+		.then((result) => {
+			dispatch(setEntity(type, result));
+			return result;
+		});
 }
 
 export function patchEntities(type, data, params) {
 	return (dispatch) => api.service('api/v1/' + type).patch(null, data, params)
-		.then((result) => dispatch(setEntities(type, result)));
+		.then((result) => {
+			dispatch(setEntities(type, result));
+			return result;
+		});
 }
 
 export function deleteEntity(type, id, params) {
 	return (dispatch) => api.service('api/v1/' + type).remove(id, params)
-		.then((result) => dispatch(removeEntity(type, result)));
+		.then((result) => {
+			dispatch(removeEntity(type, result));
+			return result;
+		});
 }
 
 export function deleteEntities(type, params) {
 	return (dispatch) => api.service('api/v1/' + type).remove(null, params)
-		.then((result) => dispatch(removeEntities(type, result)));
+		.then((result) => {
+			dispatch(removeEntities(type, result));
+			return result;
+		});
 }
 <%_ } else { _%>
 export function createEntity(type, data) {
