@@ -1,19 +1,22 @@
 import feathers from 'feathers';
+import mapValues from 'lodash.mapvalues';
 import path from 'path';
-import requireAll from 'require-all';
+import requireDirAll from 'require-dir-all';
 import rest from 'feathers-rest';
 
 const api = feathers()
 	.configure(rest());
 
-const services = requireAll({
-	dirname: path.join(__dirname, '../entities'),
-	filter:  /^(service)\.js$/,
-	resolve: (service) => service.default,
-});
+const services = mapValues(
+	requireDirAll(path.resolve(__dirname, '../entities'), {
+		recursive:    true,
+		includeFiles: /service.js$/,
+	}),
+	(service) => service.service.default
+);
 
 Object.keys(services).forEach((name) => {
-	api.use('/' + name, services[name].service);
+	api.use('/' + name, services[name]);
 });
 
 export default api;
