@@ -19,7 +19,7 @@
     "build": "run-s build:*",
     "build:generators": "babel src --out-dir generators --source-maps --ignore templates/*",
     "build:templates": "rsync src/ generators/ --include=/ --include=*/ --include=templates/** --exclude=* --recursive --verbose",
-    "clean": "rm -rf generators && npm cache clean",
+    "clean": "rm -rf generators",
     "format": "run-s format:*",
     "format-committed": "run-s format:*:committed",
     "postformat-committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | xargs -n 1 git add",

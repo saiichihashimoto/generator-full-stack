@@ -25,7 +25,7 @@
   "scripts": {
     "prebuild": "npm run clean",
     "build": "run-s build:*",
-    "clean": "rm -rf dist && npm cache clean",
+    "clean": "rm -rf dist",
     "coverage:check": "istanbul check-coverage --statements 75 --branches 75 --functions 75 --lines 75",
     "coverage:report": "cat ./coverage/lcov.info | codecov",
     "format": "run-s format:*",
