@@ -8,7 +8,7 @@ import { createAction } from 'redux-actions';
 <%_ if (api) { _%>
 import api from '../api';
 <%_ } _%>
-import schemas from '../entities/schemas.normalizr';
+import schemas from './schemas.normalizr';
 
 const setEntity            = (type, entity) => createAction('SET_ENTITIES')(normalize(entity, schemas[type]));
 const setEntities          = (type, entities) => createAction('SET_ENTITIES')(normalize(entities, arrayOf(schemas[type])));

@@ -2,7 +2,7 @@ import mapValues from 'lodash.mapvalues';
 import omit from 'lodash.omit';
 import { handleActions } from 'redux-actions';
 
-import schemas from '../entities/schemas.normalizr';
+import schemas from './schemas.normalizr';
 
 export default handleActions(
 	{
