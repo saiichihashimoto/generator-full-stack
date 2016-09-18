@@ -1,9 +1,9 @@
 {
   "scripts": {
     "build:web": "NODE_ENV=production webpack -p",
-    "format:css": "find . \\( -path ./node_modules -o -path ./dist -o -path ./data \\) -prune -o -name '*.css' -print | xargs -n 1 stylefmt --config .stylelintrc",
-    "format:css:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.css$\" | xargs -n 1 stylefmt --config .stylelintrc",
+    "format:css": "find . \\( -name '*.css' \\) -and -not \\( -path './node_modules/*' -or -path './generators/*' \\) | xargs -n 1 stylefmt --config .stylelintrc",
+    "format:css:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep '\\.css$' | xargs -n 1 stylefmt --config .stylelintrc",
     "lint:css": "stylelint \"**/*.css\" --color --ignore-path .gitignore",
-    "lint:css:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep \"\\.css$\" | xargs -n 1 -I {} stylelint {} --color"
+    "lint:css:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep '\\.css$' | xargs -n 1 -I {} stylelint {} --color"
   }
 }

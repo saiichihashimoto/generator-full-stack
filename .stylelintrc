@@ -5,14 +5,43 @@
     "block-opening-brace-space-before": "always",
     "color-hex-case": null,
     "color-hex-length": null,
-    "comment-word-blacklist": [['TODO', 'FIXME', 'HACK'], { "severity": "warning" }],
-    "declaration-block-no-ignored-properties": [true, { "severity": "warning" }],
+    "comment-word-blacklist": [
+      [
+        "TODO",
+        "FIXME",
+        "HACK"
+      ],
+      {
+        "severity": "warning"
+      }
+    ],
+    "declaration-block-no-ignored-properties": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ],
     "no-eol-whitespace": null,
     "no-missing-end-of-source-newline": null,
     "number-leading-zero": null,
-    "property-no-unknown": [true, { "severity": "warning", "ignoreProperties": ["composes", "font-smooth", "text-size-adjust"] }],
+    "property-no-unknown": [
+      true,
+      {
+        "severity": "warning",
+        "ignoreProperties": [
+          "composes",
+          "font-smooth",
+          "text-size-adjust"
+        ]
+      }
+    ],
     "selector-pseudo-element-colon-notation": "single",
-    "shorthand-property-no-redundant-values": [true, { "severity": "warning" }],
+    "shorthand-property-no-redundant-values": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ],
     "string-quotes": "single"
   }
 }
