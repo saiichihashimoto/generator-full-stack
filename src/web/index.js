@@ -73,7 +73,6 @@ export default class WebGenerator extends Base {
 		if (this.options.render === 'server') {
 			this.npmInstall(
 				[
-					'clean-webpack-plugin',
 					'write-file-webpack-plugin',
 				],
 				{ save: true }

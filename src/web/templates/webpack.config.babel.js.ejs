@@ -1,7 +1,4 @@
 import BellOnBundlerErrorPlugin from 'bell-on-bundler-error-plugin';
-<%_ if (render === 'server') { _%>
-import CleanWebpackPlugin from 'clean-webpack-plugin';
-<%_ } _%>
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import FaviconsWebpackPlugin from 'favicons-webpack-plugin';
 <%_ if (render === 'web') { _%>
@@ -101,9 +98,6 @@ export default {
 				'npm_package_version',
 			]),
 			new BellOnBundlerErrorPlugin(),
-<%_ if (render === 'server') { _%>
-			new CleanWebpackPlugin(['dist/web']),
-<%_ } _%>
 			!process.env.NODE_ENV && new require('webpack-dotenv-plugin')(),
 			process.env.NODE_ENV && new ExtractTextPlugin('css/[name].[hash].css'),
 			new FaviconsWebpackPlugin({ logo: './assets/images/logo.png', title: process.env.npm_package_name, prefix: 'favicons-[hash]/' }),
