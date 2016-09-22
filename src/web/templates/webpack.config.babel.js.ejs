@@ -9,6 +9,7 @@ import Helmet from 'react-helmet';
 import React from 'react';
 <%_ } _%>
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import ImageminPlugin from 'imagemin-webpack-plugin';
 <%_ if (render === 'server') { _%>
 import WriteFilePlugin from 'write-file-webpack-plugin';
 <%_ } _%>
@@ -60,7 +61,7 @@ export default {
 				{ exclude: /node_modules/, test: /\.(css)$/, loader: ExtractTextPlugin.extract(head(cssLoaders), tail(cssLoaders)) } :
 				{ exclude: /node_modules/, test: /\.(css)$/, loaders: cssLoaders },
 			{ exclude: /node_modules/, test: /\.(eot|ttf|(woff(2)?(\?v=\d\.\d\.\d)?))$/, loader: 'url?name=fonts/[name].[hash].[ext]&limit=10000' },
-			{ exclude: /node_modules/, test: /\.(gif|jpe?g|svg|png)$/i, loaders: ['url?name=images/[name].[hash].[ext]&limit=1000', 'image-webpack'] },
+			{ exclude: /node_modules/, test: /\.(gif|jpe?g|svg|png)$/i, loader: 'url?name=images/[name].[hash].[ext]&limit=1000' },
 			!process.env.NODE_ENV && { include: path.join(__dirname, 'components'), test: /\.(js)$/, loader: 'react-hot' },
 			{ exclude: /node_modules/, test: /\.(json)$/, loader: 'json' },
 			{ exclude: /node_modules/, test: /\.(jsx?)$/, loader: 'babel?cacheDirectory' },
@@ -113,6 +114,7 @@ export default {
 				googleAnalytics: process.env.GOOGLE_ANALYTICS_ID,
 			}),
 <%_ } _%>
+			new ImageminPlugin({ disable: !process.env.NODE_ENV }),
 <%_ if (render === 'server') { _%>
 			new WriteFilePlugin({ log: false }),
 <%_ } _%>

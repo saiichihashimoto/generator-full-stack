@@ -56,7 +56,7 @@ export default class WebGenerator extends Base {
 				'extract-text-webpack-plugin',
 				'favicons-webpack-plugin',
 				'html-webpack-plugin',
-				'image-webpack-loader',
+				'imagemin-webpack-plugin',
 				'json-loader',
 				'lodash.head',
 				'lodash.tail',
