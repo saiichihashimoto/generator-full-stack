@@ -26,9 +26,11 @@
 </head>
 <body>
 	<div id="mount"><$- html $></div>
+	<%_ if (htmlWebpackPlugin.options.state) { _%>
 	<$_ if (state) { _$>
 	<script id="state" type="text/json"><$- state $></script>
 	<$_ } _$>
+	<%_ } _%>
 
 	<$- script $>
 </body>

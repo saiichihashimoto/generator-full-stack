@@ -31,7 +31,6 @@ export default class WebGenerator extends Base {
 	}
 	configuring() {
 		this.fs.copy(this.templatePath('../../../.stylelintrc'), this.destinationPath('.stylelintrc'));
-		this.fs.copy(this.templatePath('cmrh.conf.js'), this.destinationPath('cmrh.conf.js'));
 		this.fs.copyTpl(this.templatePath('webpack.config.babel.js.ejs'), this.destinationPath('webpack.config.babel.js'), Object.assign({}, this, this.options));
 		this.fs.write(this.destinationPath('.env.default'), '');
 
@@ -49,15 +48,15 @@ export default class WebGenerator extends Base {
 			[
 				'autoprefixer',
 				'babel-loader',
+				'babel-plugin-css-modules-transform',
 				'babel-register',
 				'bell-on-bundler-error-plugin',
 				'css-loader',
-				'css-modules-require-hook',
 				'ejs-compiled-loader',
 				'extract-text-webpack-plugin',
 				'favicons-webpack-plugin',
 				'html-webpack-plugin',
-				'image-webpack-loader',
+				'imagemin-webpack-plugin',
 				'json-loader',
 				'lodash.head',
 				'lodash.tail',
@@ -74,7 +73,6 @@ export default class WebGenerator extends Base {
 		if (this.options.render === 'server') {
 			this.npmInstall(
 				[
-					'clean-webpack-plugin',
 					'write-file-webpack-plugin',
 				],
 				{ save: true }
@@ -97,21 +95,22 @@ export default class WebGenerator extends Base {
 		this.fs.copyTpl(this.templatePath('components/App/App.js.ejs'), this.destinationPath('components/App/App.js'), Object.assign({}, this, this.options));
 		this.fs.copyTpl(this.templatePath('components/routes.js.ejs'), this.destinationPath('components/routes.js'), Object.assign({}, this, this.options));
 		this.fs.copyTpl(this.templatePath('index.web.js.ejs'), this.destinationPath('index.web.js'), Object.assign({}, this, this.options));
+		this.fs.extendJSON(this.destinationPath('.babelrc'), this.fs.readJSON(this.templatePath('.babelrc')));
 		this.fs.extendJSON(this.destinationPath('.eslintrc'), this.fs.readJSON(this.templatePath('.eslintrc')));
-		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json')));
+		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json' + ((this.options.render === 'server') ? '' : '.render'))));
 		this.fs.write(
 			this.destinationPath('.editorconfig'),
 			[this.fs.read(this.destinationPath('.editorconfig')), this.fs.read(this.templatePath('.editorconfig'))].join('\n\n').replace(/\n{3,}/, '\n\n')
 		);
 		this.fs.write(
 			this.destinationPath('Procfile.dev'),
-			[this.fs.read(this.destinationPath('Procfile.dev')), this.fs.read(this.templatePath('Procfile.dev'))].join('\n').replace(/\n{2,}/, '\n')
+			[this.fs.read(this.destinationPath('Procfile.dev')), this.fs.read(this.templatePath('Procfile.dev' + ((this.options.render === 'server') ? '' : '.render')))].join('\n').replace(/\n{2,}/, '\n').trim()
 		);
 
 		switch (this.options.render) {
 			case 'server':
 				this.fs.copy(this.templatePath('web/index.ejs'), this.destinationPath('web/index.ejs'));
-				this.fs.copy(this.templatePath('web/render.middleware.js'), this.destinationPath('web/render.middleware.js'));
+				this.fs.copyTpl(this.templatePath('web/render.middleware.js.ejs'), this.destinationPath('web/render.middleware.js'), Object.assign({}, this, this.options));
 				break;
 			case 'web':
 			default:

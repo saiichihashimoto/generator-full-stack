@@ -25,7 +25,7 @@ export default class ServerGenerator extends Base {
 			});
 	}
 	configuring() {
-		this.fs.copy(this.templatePath('Procfile'), this.destinationPath('Procfile'));
+		this.fs.copy(this.templatePath('Procfile' + ((this.options.render === 'server') ? '.render' : '')), this.destinationPath('Procfile'));
 
 		this.npmInstall(
 			[
@@ -39,7 +39,7 @@ export default class ServerGenerator extends Base {
 		this.fs.copyTpl(this.templatePath('index.js.ejs'), this.destinationPath('index.js'), Object.assign({}, this, this.options));
 		this.fs.write(
 			this.destinationPath('Procfile.dev'),
-			[this.fs.read(this.templatePath('Procfile.dev')), this.fs.read(this.destinationPath('Procfile.dev'))].join('\n').replace(/\n{2,}/, '\n')
+			[this.fs.read(this.templatePath('Procfile.dev' + ((this.options.render === 'server') ? '.render' : ''))), this.fs.read(this.destinationPath('Procfile.dev'))].join('\n').replace(/\n{2,}/, '\n').trim()
 		);
 
 		this.npmInstall(

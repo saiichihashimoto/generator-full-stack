@@ -1,0 +1,15 @@
+{
+  "env": {
+    "transform-css-modules": {
+      "plugins": [
+        [
+          "css-modules-transform",
+          {
+            "camelCase": true,
+            "generateScopedName": "[name]---[local]---[hash:base64:5]"
+          }
+        ]
+      ]
+    }
+  }
+}

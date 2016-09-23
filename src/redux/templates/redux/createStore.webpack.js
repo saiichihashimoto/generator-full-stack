@@ -8,12 +8,12 @@ if (global.window && global.window.devToolsExtension) {
 }
 createMyStore = applyMiddleware(thunkMiddlware)(createMyStore);
 
-const requireContext = require.context('.', false, /^\.\/.+\.reducer$/);
+const requireContext = require.context('..', true, /^\.\/.+\/reducer$/);
 
 export default function(initialState) {
 	return createMyStore(
 		combineReducers(requireContext.keys().reduce(
-			(memo, filename) => Object.assign(memo, { [filename.match(/\.\/(.+)\.reducer/)[1]]: requireContext(filename).default }),
+			(memo, filename) => Object.assign(memo, { [filename.match(/\.\/(.+)\/reducer/)[1]]: requireContext(filename).default }),
 			{}
 		)),
 		initialState

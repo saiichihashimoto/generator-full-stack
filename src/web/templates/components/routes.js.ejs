@@ -3,13 +3,10 @@ import React from 'react';
 import Route from 'react-router/lib/Route';
 
 import App from './App/App';
-<%_ if (state === 'redux') { _%>
-import ConnectRedux from './ConnectRedux/ConnectRedux';
-<%_ } _%>
 import Foo from './Foo/Foo';
 
 export default (
-	<Route path="/" component={<% if (state === 'redux') { %>ConnectRedux(App)<% } else { %>App<% } %>}>
-		<IndexRoute component={<% if (state === 'redux') { %>ConnectRedux(Foo)<% } else { %>Foo<% } %>} />
+	<Route path="/" component={App}>
+		<IndexRoute component={Foo} />
 	</Route>
 );

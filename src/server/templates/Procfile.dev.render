@@ -1,0 +1,1 @@
+web: BABEL_DISABLE_CACHE=1 BABEL_ENV=transform-css-modules nodemon --exec babel-node --ignore dist/ -- index
