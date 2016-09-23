@@ -29,8 +29,6 @@ export default class APIGenerator extends Base {
 					'feathers',
 					'feathers-memory',
 					'feathers-rest',
-					'lodash.mapvalues',
-					'require-dir-all',
 				],
 				{ save: true }
 			);
