@@ -1,10 +1,5 @@
-import mapValues from 'lodash.mapvalues';
-import requireDirAll from 'require-dir-all';
+import foosSchema from './foos/schema.normalizr';
 
-export default mapValues(
-	requireDirAll(__dirname, {
-		recursive:    true,
-		includeFiles: /schema.normalizr.js$/,
-	}),
-	(schema) => schema['schema.normalizr'].default
-);
+export default {
+	foos: foosSchema,
+};

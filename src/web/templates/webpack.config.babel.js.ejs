@@ -38,7 +38,11 @@ import createStore from './redux/createStore';
 import routes from './components/routes';
 <%_ } _%>
 
-const cssLoaders = ['style', 'css?-autoprefixer&importLoaders=1&camelCase&modules&localIdentName=[name]---[local]---[hash:base64:5]', 'postcss'];
+const cssLoaders = [
+	'style?singleton',
+	'css?-autoprefixer&importLoaders=1&camelCase&modules&sourceMap&localIdentName=[name]---[local]' + (process.env.NODE_ENV ? '---[hash:base64:5]' : ''),
+	'postcss',
+];
 
 export default {
 	entry: {
@@ -46,7 +50,8 @@ export default {
 	},
 	output: {
 		path:          'dist/web',
-		filename:      'js/[name].[hash].js',
+		filename:      'js/[name]' + (process.env.NODE_ENV ? '.[chunkhash]' : '') + '.js',
+		chunkFilename: 'js/[name]' + (process.env.NODE_ENV ? '.[chunkhash]' : '') + '.js',
 		publicPath:    '/',
 <%_ if (render === 'server') { _%>
 		libraryTarget: (process.env.BABEL_ENV === 'transform-css-modules') ? 'commonjs2' : 'var',
@@ -113,8 +118,13 @@ export default {
 			]),
 			new BellOnBundlerErrorPlugin(),
 			!process.env.NODE_ENV && new require('webpack-dotenv-plugin')(),
-			process.env.NODE_ENV && new ExtractTextPlugin('css/[name].[hash].css'),
-			new FaviconsWebpackPlugin({ logo: './assets/images/logo.png', title: process.env.npm_package_name, prefix: 'favicons-[hash]/' }),
+			process.env.NODE_ENV && new ExtractTextPlugin('css/[name].[contenthash].css'),
+			new FaviconsWebpackPlugin({
+				logo:          './assets/images/logo.png',
+				prefix:        'favicons' + (process.env.NODE_ENV ? '-[hash]' : '') + '/',
+				statsFilename: 'iconstats' + (process.env.NODE_ENV ? '-[hash]' : '') + '.json',
+				title:         process.env.npm_package_name,
+			}),
 <%_ if (render === 'server') { _%>
 			new HtmlWebpackPlugin({
 				filename:        'index.ejs',
