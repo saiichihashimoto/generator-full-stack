@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "format": "run-s format:*",
+    "format-committed": "run-s format:*:committed",
+    "postformat-committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | xargs -n 1 git add",
+    "format:js": "find . \\( -name '*.js' \\) -and -not \\( -path './node_modules/*' -or -path './generators/*' \\) | xargs -n 1 eslint --fix --color",
+    "format:js:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep '\\.js$' | xargs -n 1 eslint --fix --color",
+    "format:json": "find . \\( -name '*.json' -or -name '.*rc' \\) -and -not \\( -path './node_modules/*' -or -path './generators/*' \\) | xargs -n 1 jsonlint --in-place",
+    "format:json:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep '\\(\\.json$\\)\\|\\(\\.[a-z]*rc$\\)' | xargs -n 1 jsonlint --in-place",
+    "format:package_json": "find . -name 'package.json' -and -not \\( -path './node_modules/*' -or -path './generators/*' \\) | sed 's/package.json//g' | xargs -n 1 -I {} sh -c 'cd {}; sort-package-json'",
+    "format:package_json:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep 'package\\.json$' | sed 's/package.json/./g' | xargs -n 1 -I {} sh -c 'cd {}; sort-package-json'"
+  }
+}
