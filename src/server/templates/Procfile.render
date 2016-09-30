@@ -1,1 +1,0 @@
-web: BABEL_DISABLE_CACHE=1 BABEL_ENV=transform-css-modules babel-node index
