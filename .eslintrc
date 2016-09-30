@@ -1,5 +1,6 @@
 {
   "extends": "xo/esnext",
+  "parser": "babel-eslint",
   "plugins": [
     "react"
   ],
@@ -13,18 +14,9 @@
     "jsx": true
   },
   "rules": {
-    "babel/arrow-parens": [
+    "arrow-parens": [
       2,
       "always"
-    ],
-    "babel/new-cap": [
-      2,
-      {
-        "newIsCapExceptions": [
-          "require"
-        ],
-        "capIsNew": false
-      }
     ],
     "babel/object-curly-spacing": 0,
     "babel/object-shorthand": 0,

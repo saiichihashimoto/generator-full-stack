@@ -59,6 +59,7 @@
     }
   },
   "dependencies": {
+    "es6-promisify": "^5.0.0",
     "yeoman-generator": "^0.24.1"
   },
   "devDependencies": {

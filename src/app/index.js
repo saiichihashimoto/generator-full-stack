@@ -1,4 +1,7 @@
-import { Base } from 'yeoman-generator';
+import { BaseGenerator } from '../utils';
 
-export default class AppGenerator extends Base {
+export default class AppGenerator extends BaseGenerator {
+	end() {
+		this._whatDidWeDo();
+	}
 }
