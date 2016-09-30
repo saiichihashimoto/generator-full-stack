@@ -1,9 +1,0 @@
-{
-  "scripts": {
-    "build:web": "BABEL_DISABLE_CACHE=1 BABEL_ENV=transform-css-modules NODE_ENV=production webpack -p",
-    "format:css": "find . \\( -name '*.css' \\) -and -not \\( -path './node_modules/*' -or -path './generators/*' \\) | xargs -n 1 stylefmt --config .stylelintrc",
-    "format:css:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep '\\.css$' | xargs -n 1 stylefmt --config .stylelintrc",
-    "lint:css": "stylelint \"**/*.css\" --color --ignore-path .gitignore",
-    "lint:css:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep '\\.css$' | xargs -n 1 -I {} stylelint {} --color"
-  }
-}
