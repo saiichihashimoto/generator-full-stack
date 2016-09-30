@@ -2,15 +2,10 @@ import { BaseGenerator } from '../utils';
 
 export default class PackageGenerator extends BaseGenerator {
 	configuring() {
+		this.fs.copy(this.templatePath('package.json'), this.destinationPath('package.json'));
 		// TODO babel setup
-		// TODO package writing
 	}
 	writing() {
-		// TODO package script for javascript formatting
-		// TODO package script for javascript linting
-		// TODO package script for json formatting
-		// TODO package script for json linting
-		// TODO package script for package formatting
-		// TODO package script for package linting
+		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.formatting.json')));
 	}
 }
