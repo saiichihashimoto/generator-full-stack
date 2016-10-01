@@ -15,14 +15,14 @@ export default class AppGenerator extends BaseGenerator {
 							return;
 						}
 						this.githubOrg = match[2];
-						this.packageName = match[3];
+						this.name = match[3];
 					},
 					() => null
 				),
 				() => this._spawn('git', ['init'])
 			)
 			.then(() => {
-				if (!this.packageName) {
+				if (!this.name) {
 					this.suggestedPackageName = process.cwd().slice(process.cwd().lastIndexOf('/') + 1);
 				}
 			});
@@ -32,15 +32,15 @@ export default class AppGenerator extends BaseGenerator {
 
 		return Promise.resolve()
 			.then(() => this.prompt(compact([
-				this.packageName === undefined && {
+				this.name === undefined && {
 					message: 'Package name?',
-					name:    'packageName',
+					name:    'name',
 					type:    'input',
 					default: this.suggestedPackageName,
 				},
 				{
 					message: 'Package description?',
-					name:    'packageDescription',
+					name:    'description',
 					type:    'input',
 				},
 				this.githubOrg === undefined && {
@@ -73,13 +73,15 @@ export default class AppGenerator extends BaseGenerator {
 					this.composeWith('full-stack:codeQuality', { options: Object.assign({}, options, { validateCommit: options.continuous }) });
 				}
 				if (options.github) {
-					this.composeWith('full-stack:github', { options: Object.assign({}, options, { description: options.packageDescription, name: options.packageName }) });
+					this.composeWith('full-stack:github', { options });
 				}
 
 				this.composeWith('full-stack:application', { options });
 				if (options.continuous) {
 					this.composeWith('full-stack:continuous', { options });
 				}
+
+				this.options = options;
 			});
 	}
 	configuring() {
