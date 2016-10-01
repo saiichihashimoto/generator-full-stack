@@ -4,26 +4,7 @@ import promisify from 'es6-promisify';
 import { BaseGenerator } from '../utils';
 
 export default class AppGenerator extends BaseGenerator {
-	constructor(...args) {
-		super(...args);
-
-		this.option('codeQuality');
-		this.option('continuous');
-		this.option('github');
-	}
 	initializing() {
-		this.composeWith('full-stack:api', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:bithound', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:codecov', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:github-pages', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:heroku', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:license', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:npm', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:server', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:tests', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:travis', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:website', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-
 		return promisify(fs.stat, fs)('.git')
 			.then(
 				() => this._spawn('git', ['config', '--get', 'remote.origin.url']).then(
@@ -47,51 +28,63 @@ export default class AppGenerator extends BaseGenerator {
 			});
 	}
 	prompting() {
-		return this.prompt(compact([
-			this.packageName === undefined && {
-				message: 'What is the package name?',
-				name:    'packageName',
-				type:    'input',
-				default: this.suggestedPackageName,
-			},
-			{
-				message: 'What is the package description?',
-				name:    'packageDescription',
-				type:    'input',
-			},
-			this.githubOrg === undefined && {
-				message: 'What is your github username (or organization)?',
-				name:    'githubOrg',
-				type:    'input',
-			},
-			this.options.github === undefined && {
-				message: 'Would you like us to initialize your github repo?',
-				name:    'github',
-				type:    'confirm',
-			},
-			this.options.continuous === undefined && {
-				message: 'Would you like to have continuous integration?',
-				name:    'continuous',
-				type:    'confirm',
-			},
-			this.options.codeQuality === undefined && {
-				message: 'Would you like to lint & format your code?',
-				name:    'codeQuality',
-				type:    'confirm',
-			},
-		]))
-			.then((answers) => {
-				const options = Object.assign({}, this.options, answers);
+		let options = Object.assign({}, this.options);
 
-				this.composeWith('full-stack:hooks', { options: { codeQuality: options.codeQuality, validateCommit: options.continuous, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-				this.composeWith('full-stack:package', { options: { codeQuality: options.codeQuality, description: options.packageDescription, githubOrg: options.githubOrg, name: options.packageName, release: options.continuous, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		return Promise.resolve()
+			.then(() => this.prompt(compact([
+				this.packageName === undefined && {
+					message: 'Package name?',
+					name:    'packageName',
+					type:    'input',
+					default: this.suggestedPackageName,
+				},
+				{
+					message: 'Package description?',
+					name:    'packageDescription',
+					type:    'input',
+				},
+				this.githubOrg === undefined && {
+					message: 'GitHub username (or organization)?',
+					name:    'githubOrg',
+					type:    'input',
+				},
+				options.github === undefined && {
+					message: 'Setup GitHub?',
+					name:    'github',
+					type:    'confirm',
+				},
+				options.codeQuality === undefined && {
+					message: 'Code Quality?',
+					name:    'codeQuality',
+					type:    'confirm',
+				},
+				options.continuous === undefined && {
+					message: 'Continuous?',
+					name:    'continuous',
+					type:    'confirm',
+				},
+			])))
+			.then((answers) => {
+				options = Object.assign({}, options, answers);
+			})
+			.then(() => {
+				this.composeWith('full-stack:license', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+				if (options.codeQuality || options.continuous) {
+					this.composeWith('full-stack:codeQuality', { options: { validateCommit: options.continuous, skipCache: options.skipCache, skipInstall: options.skipInstall } });
+				}
 				if (options.github) {
-					this.composeWith('full-stack:github', { options: { description: options.packageDescription, githubOrg: options.githubOrg, name: options.packageName, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+					this.composeWith('full-stack:github', { options: { description: options.packageDescription, githubOrg: options.githubOrg, name: options.packageName, skipCache: options.skipCache, skipInstall: options.skipInstall } });
+				}
+
+				this.composeWith('full-stack:application', { options });
+				if (options.continuous) {
+					this.composeWith('full-stack:continuous', { options });
 				}
 			});
 	}
 	configuring() {
 		this.fs.copy(this.templatePath('.gitignore'), this.destinationPath('.gitignore'));
+		this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), this.options);
 		// TODO babel setup
 	}
 }

@@ -10,18 +10,10 @@ github.authenticate({
 });
 
 export default class GitHubGenerator extends BaseGenerator {
-	constructor(...args) {
-		super(...args);
-
-		this.option('description');
-		this.option('githubOrg');
-		this.option('labels');
-		this.option('name');
-	}
 	prompting() {
 		return this.prompt(compact([
 			this.options.github === undefined && {
-				message: 'Would you like us to initialize your github labels?',
+				message: 'Robin Powered GitHub labels?',
 				name:    'labels',
 				type:    'confirm',
 			},

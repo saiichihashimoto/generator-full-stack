@@ -15,5 +15,10 @@
     "lint:js:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep '\\.js$' | xargs -n 1 eslint --color",
     "lint:json": "find . \\( -name '*.json' -or -name '.*rc' \\) -and -not \\( -path './node_modules/*' -or -path './generators/*' \\) | xargs -n 1 jsonlint --quiet",
     "lint:json:committed": "git diff --staged --name-only --diff-filter=ACMRTUXB | grep '\\(\\.json$\\)\\|\\(\\.[a-z]*rc$\\)' | xargs -n 1 jsonlint --quiet"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run format-committed && npm run lint-committed"
+    }
   }
 }

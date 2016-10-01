@@ -1,6 +1,6 @@
 import { BaseGenerator } from '../utils';
 
-export default class TestsGenerator extends BaseGenerator {
+export default class MochaGenerator extends BaseGenerator {
 	configuring() {
 		// TODO mocha writing
 	}
