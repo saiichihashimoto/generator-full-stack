@@ -36,13 +36,13 @@ export default class ContinuousGenerator extends BaseGenerator {
 				this.npmInstall(['semantic-release'], { saveDev: true });
 
 				if (options.test) {
-					this.composeWith('full-stack:mocha', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+					this.composeWith('full-stack:mocha', { options });
 					if (options.coverage) {
-						this.composeWith('full-stack:codecov', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+						this.composeWith('full-stack:codecov', { options });
 					}
 				}
 				if (options.analysis) {
-					this.composeWith('full-stack:bithound', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+					this.composeWith('full-stack:bithound', { options });
 				}
 			});
 	}

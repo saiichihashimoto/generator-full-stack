@@ -68,12 +68,12 @@ export default class AppGenerator extends BaseGenerator {
 				options = Object.assign({}, options, answers);
 			})
 			.then(() => {
-				this.composeWith('full-stack:license', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+				this.composeWith('full-stack:license', { options });
 				if (options.codeQuality || options.continuous) {
-					this.composeWith('full-stack:codeQuality', { options: { validateCommit: options.continuous, skipCache: options.skipCache, skipInstall: options.skipInstall } });
+					this.composeWith('full-stack:codeQuality', { options: Object.assign({}, options, { validateCommit: options.continuous }) });
 				}
 				if (options.github) {
-					this.composeWith('full-stack:github', { options: { description: options.packageDescription, githubOrg: options.githubOrg, name: options.packageName, skipCache: options.skipCache, skipInstall: options.skipInstall } });
+					this.composeWith('full-stack:github', { options: Object.assign({}, options, { description: options.packageDescription, name: options.packageName }) });
 				}
 
 				this.composeWith('full-stack:application', { options });

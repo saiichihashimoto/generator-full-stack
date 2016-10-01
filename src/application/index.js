@@ -38,17 +38,17 @@ export default class ApplicationGenerator extends BaseGenerator {
 			})
 			.then(() => {
 				if (options.server && options.website && options.api) {
-					this.composeWith('full-stack:api', { options: { skipCache: options.skipCache, skipInstall: options.skipInstall } });
+					this.composeWith('full-stack:api', { options });
 				}
 				if (options.server) {
-					this.composeWith('full-stack:server', { options: { skipCache: options.skipCache, skipInstall: options.skipInstall } });
+					this.composeWith('full-stack:server', { options });
 				}
 				if (options.website) {
-					this.composeWith('full-stack:website', { options: { skipCache: options.skipCache, skipInstall: options.skipInstall } });
+					this.composeWith('full-stack:website', { options });
 				}
 
 				if (options.release) {
-					this.composeWith('full-stack:release', { options: { skipCache: options.skipCache, skipInstall: options.skipInstall } });
+					this.composeWith('full-stack:release', { options });
 				}
 			});
 	}
