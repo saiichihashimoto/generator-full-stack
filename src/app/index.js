@@ -11,18 +11,18 @@ export default class AppGenerator extends BaseGenerator {
 		this.option('continuous');
 	}
 	initializing() {
-		this.composeWith('full-stack:api');
-		this.composeWith('full-stack:bithound');
-		this.composeWith('full-stack:codecov');
-		this.composeWith('full-stack:github');
-		this.composeWith('full-stack:github-pages');
-		this.composeWith('full-stack:heroku');
-		this.composeWith('full-stack:license');
-		this.composeWith('full-stack:npm');
-		this.composeWith('full-stack:server');
-		this.composeWith('full-stack:tests');
-		this.composeWith('full-stack:travis');
-		this.composeWith('full-stack:website');
+		this.composeWith('full-stack:api', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:bithound', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:codecov', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:github', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:github-pages', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:heroku', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:license', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:npm', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:server', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:tests', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:travis', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+		this.composeWith('full-stack:website', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
 
 		return promisify(fs.stat, fs)('.git')
 			.then(
@@ -73,16 +73,17 @@ export default class AppGenerator extends BaseGenerator {
 			.then((answers) => {
 				const options = Object.assign({}, this.options, answers);
 
-				this.composeWith('full-stack:hooks', { options: { codeQuality: options.codeQuality, validateCommit: options.continuous } });
-				this.composeWith('full-stack:package', { options: { codeQuality: options.codeQuality, name: options.packageName, githubOrg: options.githubOrg, release: options.continuous } });
+				this.composeWith('full-stack:hooks', { options: { codeQuality: options.codeQuality, validateCommit: options.continuous, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+				this.composeWith('full-stack:package', { options: { codeQuality: options.codeQuality, name: options.packageName, githubOrg: options.githubOrg, release: options.continuous, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
 			});
 	}
 	configuring() {
+		this.fs.copy(this.templatePath('.gitignore'), this.destinationPath('.gitignore'));
 		// TODO babel setup
 	}
 	end() {
 		return this._spawn('git', ['add', '.'])
-			.then(() => this._spawn('git', ['commit', '-m', '"chore(package): initializing package"']))
-			.catch(() => null);
+			.then(() => this._spawn('git', ['commit']))
+			.catch((err) => console.log(err));
 	}
 }

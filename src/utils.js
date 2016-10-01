@@ -17,7 +17,7 @@ export class BaseGenerator extends Base {
 
 			spawn.on('close', (code) => {
 				if (code) {
-					reject(error);
+					reject(new Error(error));
 				} else {
 					resolve(value);
 				}
