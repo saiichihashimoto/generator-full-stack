@@ -7,7 +7,6 @@ export default class AppGenerator extends BaseGenerator {
 
 		this.option('codeQuality');
 		this.option('continuous');
-		this.option('format');
 	}
 	initializing() {
 		this.composeWith('full-stack:api');
@@ -31,7 +30,7 @@ export default class AppGenerator extends BaseGenerator {
 				name:    'codeQuality',
 				type:    'confirm',
 			},
-			this.options.format === undefined && {
+			this.options.continuous === undefined && {
 				message: 'Would you like to have continuous integration?',
 				name:    'continuous',
 				type:    'confirm',
