@@ -9,12 +9,12 @@ export default class AppGenerator extends BaseGenerator {
 
 		this.option('codeQuality');
 		this.option('continuous');
+		this.option('github');
 	}
 	initializing() {
 		this.composeWith('full-stack:api', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
 		this.composeWith('full-stack:bithound', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
 		this.composeWith('full-stack:codecov', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-		this.composeWith('full-stack:github', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
 		this.composeWith('full-stack:github-pages', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
 		this.composeWith('full-stack:heroku', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
 		this.composeWith('full-stack:license', { options: { skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
@@ -48,6 +48,27 @@ export default class AppGenerator extends BaseGenerator {
 	}
 	prompting() {
 		return this.prompt(compact([
+			this.packageName === undefined && {
+				message: 'What is the package name?',
+				name:    'packageName',
+				type:    'input',
+				default: this.suggestedPackageName,
+			},
+			{
+				message: 'What is the package description?',
+				name:    'packageDescription',
+				type:    'input',
+			},
+			this.githubOrg === undefined && {
+				message: 'What is your github username (or organization)?',
+				name:    'githubOrg',
+				type:    'input',
+			},
+			this.options.github === undefined && {
+				message: 'Would you like us to initialize your github repo?',
+				name:    'github',
+				type:    'confirm',
+			},
 			this.options.continuous === undefined && {
 				message: 'Would you like to have continuous integration?',
 				name:    'continuous',
@@ -58,23 +79,15 @@ export default class AppGenerator extends BaseGenerator {
 				name:    'codeQuality',
 				type:    'confirm',
 			},
-			this.packageName === undefined && {
-				message: 'What is the package name?',
-				name:    'packageName',
-				type:    'input',
-				default: this.suggestedPackageName,
-			},
-			this.githubOrg === undefined && {
-				message: 'What is your github username (or organization)?',
-				name:    'githubOrg',
-				type:    'input',
-			},
 		]))
 			.then((answers) => {
 				const options = Object.assign({}, this.options, answers);
 
 				this.composeWith('full-stack:hooks', { options: { codeQuality: options.codeQuality, validateCommit: options.continuous, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
-				this.composeWith('full-stack:package', { options: { codeQuality: options.codeQuality, name: options.packageName, githubOrg: options.githubOrg, release: options.continuous, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+				this.composeWith('full-stack:package', { options: { codeQuality: options.codeQuality, description: options.packageDescription, githubOrg: options.githubOrg, name: options.packageName, release: options.continuous, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+				if (options.github) {
+					this.composeWith('full-stack:github', { options: { description: options.packageDescription, githubOrg: options.githubOrg, name: options.packageName, skipCache: this.options.skipCache, skipInstall: this.options.skipInstall } });
+				}
 			});
 	}
 	configuring() {

@@ -60,6 +60,7 @@
   },
   "dependencies": {
     "es6-promisify": "^5.0.0",
+    "github": "^3.1.1",
     "lodash.compact": "^3.0.1",
     "yeoman-generator": "^0.24.1"
   },

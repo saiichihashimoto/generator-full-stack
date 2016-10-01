@@ -5,8 +5,9 @@ export default class PackageGenerator extends BaseGenerator {
 		super(...args);
 
 		this.option('codeQuality');
-		this.option('name');
+		this.option('description');
 		this.option('githubOrg');
+		this.option('name');
 		this.option('release');
 	}
 	configuring() {

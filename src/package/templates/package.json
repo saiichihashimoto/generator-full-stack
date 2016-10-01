@@ -1,5 +1,6 @@
 {
   "name": "<%= name %>",
+  "description": "<%= description %>",
   "bugs": {
     "url": "https://github.com/<%= githubOrg %>/<%= name %>/issues"
   },
