@@ -5,11 +5,12 @@ export default class PackageGenerator extends BaseGenerator {
 		super(...args);
 
 		this.option('codeQuality');
+		this.option('name');
+		this.option('githubOrg');
 		this.option('release');
 	}
 	configuring() {
-		this.fs.copy(this.templatePath('package.json'), this.destinationPath('package.json'));
-		// TODO babel setup
+		this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), this.options);
 	}
 	writing() {
 		if (this.options.codeQuality) {
