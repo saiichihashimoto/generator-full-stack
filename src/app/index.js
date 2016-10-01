@@ -81,9 +81,4 @@ export default class AppGenerator extends BaseGenerator {
 		this.fs.copy(this.templatePath('.gitignore'), this.destinationPath('.gitignore'));
 		// TODO babel setup
 	}
-	end() {
-		return this._spawn('git', ['add', '.'])
-			.then(() => this._spawn('git', ['commit']))
-			.catch((err) => console.log(err));
-	}
 }
