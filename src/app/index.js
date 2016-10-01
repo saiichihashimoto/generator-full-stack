@@ -22,10 +22,6 @@ export default class AppGenerator extends BaseGenerator {
 			},
 		]))
 			.then((answers) => {
-				this.composeWith('full-stack:package', { options: { lint: this.options.lint || answers.lint, format: this.options.format || answers.format } });
-				this.composeWith('full-stack:hooks');
-
-				// FIXME Need to deal with
 				this.composeWith('full-stack:api');
 				this.composeWith('full-stack:bithound');
 				this.composeWith('full-stack:codecov');
@@ -33,8 +29,10 @@ export default class AppGenerator extends BaseGenerator {
 				this.composeWith('full-stack:github');
 				this.composeWith('full-stack:github-pages');
 				this.composeWith('full-stack:heroku');
+				this.composeWith('full-stack:hooks');
 				this.composeWith('full-stack:license');
 				this.composeWith('full-stack:npm');
+				this.composeWith('full-stack:package', { options: { lint: answers.lint || this.options.lint, format: answers.format || this.options.format } });
 				this.composeWith('full-stack:server');
 				this.composeWith('full-stack:tests');
 				this.composeWith('full-stack:travis');
