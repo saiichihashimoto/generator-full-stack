@@ -4,5 +4,16 @@
     "prerelease": "semantic-release pre && npm run build",
     "release": "run-s release:*",
     "postrelease": "semantic-release post"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    },
+    "ghooks": {
+      "commit-msg": "validate-commit-msg"
+    },
+    "validate-commit-msg": {
+      "helpMessage": "Install commitizen and use `git cz` instead of `git commit` https://github.com/commitizen/cz-cli#installing-the-command-line-tool"
+    }
   }
 }

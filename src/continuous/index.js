@@ -33,7 +33,15 @@ export default class ContinuousGenerator extends BaseGenerator {
 			})
 			.then(() => {
 				this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json')));
-				this.npmInstall(['semantic-release'], { saveDev: true });
+				this.npmInstall(
+					[
+						'cz-conventional-changelog',
+						'npm-run-all',
+						'semantic-release',
+						'validate-commit-msg',
+					],
+					{ saveDev: true }
+				);
 
 				if (options.test) {
 					this.composeWith('full-stack:mocha', { options });

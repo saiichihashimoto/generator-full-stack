@@ -25,16 +25,5 @@ export default class CodeQualityGenerator extends BaseGenerator {
 			],
 			{ saveDev: true }
 		);
-
-		if (this.options.validateCommit) {
-			this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('validateCommit/package.json')));
-			this.npmInstall(
-				[
-					'cz-conventional-changelog',
-					'validate-commit-msg',
-				],
-				{ saveDev: true }
-			);
-		}
 	}
 }
