@@ -4,7 +4,6 @@
       "path": "./node_modules/cz-conventional-changelog"
     },
     "ghooks": {
-      "pre-commit": "npm run format-committed && npm run lint-committed",
       "commit-msg": "validate-commit-msg"
     },
     "validate-commit-msg": {

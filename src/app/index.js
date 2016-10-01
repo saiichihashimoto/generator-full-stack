@@ -5,38 +5,43 @@ export default class AppGenerator extends BaseGenerator {
 	constructor(...args) {
 		super(...args);
 
+		this.option('codeQuality');
+		this.option('continuous');
 		this.option('format');
-		this.option('lint');
+	}
+	initializing() {
+		this.composeWith('full-stack:api');
+		this.composeWith('full-stack:bithound');
+		this.composeWith('full-stack:codecov');
+		this.composeWith('full-stack:git');
+		this.composeWith('full-stack:github');
+		this.composeWith('full-stack:github-pages');
+		this.composeWith('full-stack:heroku');
+		this.composeWith('full-stack:license');
+		this.composeWith('full-stack:npm');
+		this.composeWith('full-stack:server');
+		this.composeWith('full-stack:tests');
+		this.composeWith('full-stack:travis');
+		this.composeWith('full-stack:website');
 	}
 	prompting() {
 		return this.prompt(compact([
-			this.options.lint === undefined && {
-				message: 'Would you like to have linting scripts?',
-				name:    'lint',
+			this.options.codeQuality === undefined && {
+				message: 'Would you like to lint & format your code?',
+				name:    'codeQuality',
 				type:    'confirm',
 			},
 			this.options.format === undefined && {
-				message: 'Would you like to have formatting scripts?',
-				name:    'format',
+				message: 'Would you like to have continuous integration?',
+				name:    'continuous',
 				type:    'confirm',
 			},
 		]))
 			.then((answers) => {
-				this.composeWith('full-stack:api');
-				this.composeWith('full-stack:bithound');
-				this.composeWith('full-stack:codecov');
-				this.composeWith('full-stack:git');
-				this.composeWith('full-stack:github');
-				this.composeWith('full-stack:github-pages');
-				this.composeWith('full-stack:heroku');
-				this.composeWith('full-stack:hooks');
-				this.composeWith('full-stack:license');
-				this.composeWith('full-stack:npm');
-				this.composeWith('full-stack:package', { options: { lint: answers.lint || this.options.lint, format: answers.format || this.options.format } });
-				this.composeWith('full-stack:server');
-				this.composeWith('full-stack:tests');
-				this.composeWith('full-stack:travis');
-				this.composeWith('full-stack:website');
+				const options = Object.assign({}, this.options, answers);
+
+				this.composeWith('full-stack:hooks', { options: { validateCommit: options.continuous, codeQuality: options.codeQuality } });
+				this.composeWith('full-stack:package', { options: { codeQuality: options.codeQuality } });
 			});
 	}
 }

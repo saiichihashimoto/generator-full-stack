@@ -1,0 +1,7 @@
+{
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run format-committed && npm run lint-committed"
+    }
+  }
+}
