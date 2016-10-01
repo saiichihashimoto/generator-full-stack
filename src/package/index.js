@@ -5,6 +5,7 @@ export default class PackageGenerator extends BaseGenerator {
 		super(...args);
 
 		this.option('codeQuality');
+		this.option('release');
 	}
 	configuring() {
 		this.fs.copy(this.templatePath('package.json'), this.destinationPath('package.json'));
@@ -13,6 +14,9 @@ export default class PackageGenerator extends BaseGenerator {
 	writing() {
 		if (this.options.codeQuality) {
 			this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('codeQuality/package.json')));
+		}
+		if (this.options.release) {
+			this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('release/package.json')));
 		}
 	}
 }

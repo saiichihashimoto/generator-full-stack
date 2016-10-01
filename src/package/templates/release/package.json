@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "run-s build:*",
+    "prerelease": "semantic-release pre && npm run build",
+    "release": "run-s release:*",
+    "postrelease": "semantic-release post"
+  }
+}

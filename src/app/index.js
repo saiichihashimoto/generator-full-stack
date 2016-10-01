@@ -39,8 +39,8 @@ export default class AppGenerator extends BaseGenerator {
 			.then((answers) => {
 				const options = Object.assign({}, this.options, answers);
 
-				this.composeWith('full-stack:hooks', { options: { validateCommit: options.continuous, codeQuality: options.codeQuality } });
-				this.composeWith('full-stack:package', { options: { codeQuality: options.codeQuality } });
+				this.composeWith('full-stack:hooks', { options: { codeQuality: options.codeQuality, validateCommit: options.continuous } });
+				this.composeWith('full-stack:package', { options: { codeQuality: options.codeQuality, release: options.continuous } });
 			});
 	}
 }
