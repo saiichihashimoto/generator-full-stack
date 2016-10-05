@@ -89,4 +89,10 @@ export default class AppGenerator extends BaseGenerator {
 		this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), this.options);
 		// TODO babel setup
 	}
+	end() {
+		// TODO git add remote (if necessary)
+		// TODO git add
+		// TODO git commit
+		// TODO git push
+	}
 }

@@ -32,17 +32,6 @@ export default class ContinuousGenerator extends BaseGenerator {
 				options = Object.assign({}, options, answers);
 			})
 			.then(() => {
-				this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json')));
-				this.npmInstall(
-					[
-						'cz-conventional-changelog',
-						'npm-run-all',
-						'semantic-release',
-						'validate-commit-msg',
-					],
-					{ saveDev: true }
-				);
-
 				if (options.test) {
 					this.composeWith('full-stack:mocha', { options });
 					if (options.coverage) {
@@ -53,5 +42,21 @@ export default class ContinuousGenerator extends BaseGenerator {
 					this.composeWith('full-stack:bithound', { options });
 				}
 			});
+	}
+	configuring() {
+		this.fs.copy(this.templatePath('.travis.yml'), this.destinationPath('.travis.yml'));
+		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json')));
+		this.npmInstall(
+			[
+				'cz-conventional-changelog',
+				'npm-run-all',
+				'semantic-release',
+				'validate-commit-msg',
+			],
+			{ saveDev: true }
+		);
+	}
+	end() {
+		return this._spawn('travis', ['enable']);
 	}
 }
