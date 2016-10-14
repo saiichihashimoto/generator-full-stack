@@ -1,6 +1,15 @@
+import mapKeys from 'lodash.mapkeys';
+
 import { Base } from 'yeoman-generator';
 
 export class BaseGenerator extends Base {
+	_passableOptions(forGenerator) {
+		return Object.assign(
+			{},
+			this.options,
+			mapKeys(this.options, (value, key) => key.startsWith(forGenerator) ? key.replace(forGenerator, '') : key)
+		);
+	}
 	_spawn(command, args, opt) {
 		return new Promise((resolve, reject) => {
 			this.log(command, '"' + args.join('" "') + '"');

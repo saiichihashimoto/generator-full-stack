@@ -8,7 +8,7 @@ export default class RepoGenerator extends BaseGenerator {
 		return promisify(fs.stat, fs)('.git')
 			.then(
 				() => this._spawn('git', ['config', '--get', 'remote.origin.url'])
-					.catch(() => this.composeWith('full-stack:github-repo', { options: this.options })),
+					.catch(() => this.composeWith('full-stack:github-repo', { options: this._passableOptions('github-repo') })),
 				() => {
 					this.noRepo = true;
 				}
