@@ -9,11 +9,12 @@ export default class AppGenerator extends BaseGenerator {
 	}
 	initializing() {
 		this.composeWith('full-stack:repo', { options: this.options });
+		this.composeWith('full-stack:ci', { options: this.options });
 	}
 	configuring() {
 		this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), this.options);
 	}
-	/*
+	/* TODO
 	prompting() {
 		let options = Object.assign({}, this.options);
 
