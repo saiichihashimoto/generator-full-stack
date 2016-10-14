@@ -1,13 +1,6 @@
 {
   "name": "<%= name %>",
   "description": "<%= description %>",
-  "bugs": {
-    "url": "https://github.com/<%= githubOrg %>/<%= name %>/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/<%= githubOrg %>/<%= name %>.git"
-  },
   "engines": {
     "node": "^6.1.0",
     "npm": "^3.9.0"

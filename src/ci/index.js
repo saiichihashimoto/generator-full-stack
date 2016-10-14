@@ -1,7 +1,8 @@
 import compact from 'lodash.compact';
-import { BaseGenerator } from '../utils';
 
-export default class ContinuousGenerator extends BaseGenerator {
+import { BaseGenerator } from '../base';
+
+export default class CIGenerator extends BaseGenerator {
 	prompting() {
 		let options = Object.assign({}, this.options);
 

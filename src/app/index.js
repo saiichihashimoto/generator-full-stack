@@ -1,32 +1,19 @@
-import compact from 'lodash.compact';
-import fs from 'fs';
-import promisify from 'es6-promisify';
-import { BaseGenerator } from '../utils';
+import { BaseGenerator } from '../base';
 
 export default class AppGenerator extends BaseGenerator {
-	initializing() {
-		return promisify(fs.stat, fs)('.git')
-			.then(
-				() => this._spawn('git', ['config', '--get', 'remote.origin.url']).then(
-					(remoteRepo) => {
-						this.remoteRepo = remoteRepo;
-						const match = this.remoteRepo.match(/git@(.+):(.+)\/(.+)\.git/);
-						if (!match) {
-							return;
-						}
-						this.githubOrg = match[2];
-						this.name = match[3];
-					},
-					() => null
-				),
-				() => this._spawn('git', ['init'])
-			)
-			.then(() => {
-				if (!this.name) {
-					this.suggestedPackageName = process.cwd().slice(process.cwd().lastIndexOf('/') + 1);
-				}
-			});
+	constructor(...args) {
+		super(...args);
+
+		this.option('description', { type: String });
+		this.option('name', { type: String });
 	}
+	initializing() {
+		this.composeWith('full-stack:repo', { options: this.options });
+	}
+	configuring() {
+		this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), this.options);
+	}
+	/*
 	prompting() {
 		let options = Object.assign({}, this.options);
 
@@ -83,16 +70,5 @@ export default class AppGenerator extends BaseGenerator {
 
 				this.options = options;
 			});
-	}
-	configuring() {
-		this.fs.copy(this.templatePath('.gitignore'), this.destinationPath('.gitignore'));
-		this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), this.options);
-		// TODO babel setup
-	}
-	end() {
-		// TODO git add remote (if necessary)
-		// TODO git add
-		// TODO git commit
-		// TODO git push
-	}
+	*/
 }

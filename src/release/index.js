@@ -1,5 +1,6 @@
 import compact from 'lodash.compact';
-import { BaseGenerator } from '../utils';
+
+import { BaseGenerator } from '../base';
 
 export default class ReleaseGenerator extends BaseGenerator {
 	prompting() {

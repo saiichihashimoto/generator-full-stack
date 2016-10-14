@@ -1,0 +1,58 @@
+current generators
+- api
+- app
+- application
+- bithound
+- codeQuality
+- codecov
+- continuous
+- github
+- github-pages
+- heroku
+- license
+- mocha
+- npm
+- release
+- server
+- website
+
+having a bunch of generators is fine if its handles the situation
+- if we need website-release and website-code instead of having both those in website, its all good
+
+name from specific to general
+- heroku-server-release
+- codecov-coverage-ci
+- website-code[Quality]
+
+naming defines where its called from
+- heroku-server-release is called from server-release
+- server-release is called from release
+- alternatively, heroku-server-release is called from release and there is no server-release
+- regardless, release is called from a separate generator
+
+naming defines what options are passed
+- heroku-server-release will get the same args as server-release + its own specific args
+
+base-* is used simply for interfaces rather than actual generators
+- heroku-server-release might extend base-server-release
+
+possible generators
+- api
+- app
+- bithound-ci
+- ci
+- codecov-ci
+- css-lint
+- github-repository
+- github[-website]-release
+- heroku[-server]-release
+- js-lint
+- license
+- lint
+- mocha-unit-test
+- npm-release
+- release
+- repository
+- server
+- test
+- website
