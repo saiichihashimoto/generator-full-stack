@@ -45,6 +45,7 @@ export default class GitHubRepoGenerator extends BaseGenerator {
 			allow_rebase_merge: false,
 			allow_squash_merge: false,
 		})
+			.then(() => this._spawn('git', ['remote', 'add', 'origin', 'git@github.com:' + this.options.user + '/' + this.options.name + '.git']))
 			.then(() => this._spawn('git', ['push']))
 			.then(() => Promise.all([
 				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: '5ebeff', name: 'optimization' }),

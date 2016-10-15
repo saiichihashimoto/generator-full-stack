@@ -12,7 +12,7 @@ export class BaseGenerator extends Base {
 	}
 	_spawn(command, args, opt) {
 		return new Promise((resolve, reject) => {
-			this.log(command, '"' + args.join('" "') + '"');
+			this.log(command, args.join(' '));
 			const spawn = this.spawnCommand(command, args, Object.assign({ stdio: 'pipe' }, opt));
 			let error = '';
 			let value = '';

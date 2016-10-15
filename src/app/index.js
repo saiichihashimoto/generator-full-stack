@@ -9,7 +9,6 @@ export default class AppGenerator extends BaseGenerator {
 	}
 	initializing() {
 		this.composeWith('full-stack:repo', { options: this._passableOptions('repo') });
-		this.composeWith('full-stack:ci', { options: this._passableOptions('ci') });
 	}
 	configuring() {
 		this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), this.options);
