@@ -15,7 +15,9 @@ export default class CIGenerator extends BaseGenerator {
 		);
 	}
 	end() {
-		return this._spawn('travis', ['enable'])
+		return this._span('travis', ['version'])
+			.catch(() => this._spawn('gem', ['install', 'travis']))
+			.then(() => this._spawn('travis', ['enable']))
 			.then(() => this._spawn('travis', ['settings', 'builds_only_with_travis_yml', '--enable']))
 			.then(() => this._spawn('travis', ['settings', 'build_pushes', '--enable']))
 			.then(() => this._spawn('travis', ['settings', 'build_pull_requests', '--disable']));
