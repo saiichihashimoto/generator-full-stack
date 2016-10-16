@@ -3,6 +3,8 @@ import { BaseGenerator } from '../base';
 export default class CIGenerator extends BaseGenerator {
 	configuring() {
 		this.fs.copy(this.templatePath('.travis.yml'), this.destinationPath('.travis.yml'));
+	}
+	writing() {
 		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json')));
 		this.npmInstall(
 			[
@@ -15,7 +17,7 @@ export default class CIGenerator extends BaseGenerator {
 		);
 	}
 	end() {
-		return this._span('travis', ['version'])
+		return this._spawn('travis', ['version'])
 			.catch(() => this._spawn('gem', ['install', 'travis']))
 			.then(() => this._spawn('travis', ['enable']))
 			.then(() => this._spawn('travis', ['settings', 'builds_only_with_travis_yml', '--enable']))
