@@ -7,7 +7,7 @@ export class BaseGenerator extends Base {
 		return Object.assign(
 			{},
 			this.options,
-			mapKeys(this.options, (value, key) => key.startsWith(forGenerator) ? key.replace(forGenerator, '') : key)
+			mapKeys(this.options, (value, key) => key.endsWith(forGenerator) ? key.slice(0, -forGenerator.length) : key)
 		);
 	}
 	_spawn(command, args, opt) {
