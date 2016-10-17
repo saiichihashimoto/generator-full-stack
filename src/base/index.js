@@ -12,19 +12,18 @@ export class BaseGenerator extends Base {
 	}
 	_spawn(command, args, opt) {
 		return new Promise((resolve, reject) => {
-			const commandAsString = command + ' "' + args.join('" "') + '"';
+			const commandAsString = command + ' ' + args.map((arg) => arg.includes(' ') ? '"' + arg + '"' : arg).join(' ');
 			this.log();
 			this.log('$', commandAsString);
 			this.log();
 
-			const process = this.spawnCommand(command, args, opt);
-
-			process.once('exit', (code, signal) => {
-				if (code) {
-					return reject(new Error('Spawned command failed with ' + code + ' ' + signal + ': ' + commandAsString));
-				}
-				resolve();
-			});
+			this.spawnCommand(command, args, opt)
+				.once('exit', (code, signal) => {
+					if (code) {
+						return reject(new Error('Spawned command failed with ' + code + ' ' + signal + ': ' + commandAsString));
+					}
+					resolve();
+				});
 		});
 	}
 }
