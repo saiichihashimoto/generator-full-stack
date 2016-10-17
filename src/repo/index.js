@@ -12,7 +12,7 @@ export default class RepoGenerator extends BaseGenerator {
 			.then(
 				() => this._spawn('git', ['config', '--get', 'remote.origin.url'])
 					.then((remoteRepo) => !remoteRepo.length && Promise.reject())
-					.catch(() => this.composeWith('full-stack:github-repo', { options: this._passableOptions('github-repo') }))
+					.catch(() => this.composeWith('full-stack:github', { options: this._passableOptions('github') }))
 			);
 	}
 	end() {

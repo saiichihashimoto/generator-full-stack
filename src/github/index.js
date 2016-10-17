@@ -10,7 +10,7 @@ github.authenticate({
 	token: process.env.GH_TOKEN,
 });
 
-export default class GitHubRepoGenerator extends BaseGenerator {
+export default class GitHubGenerator extends BaseGenerator {
 	constructor(...args) {
 		super(...args);
 

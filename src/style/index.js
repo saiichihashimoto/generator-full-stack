@@ -1,6 +1,6 @@
 import { BaseGenerator } from '../base';
 
-export default class LintGenerator extends BaseGenerator {
+export default class StyleGenerator extends BaseGenerator {
 	configuring() {
 		this.fs.copy(this.templatePath('.eslintrc'), this.destinationPath('.eslintrc'));
 		this.npmInstall(
