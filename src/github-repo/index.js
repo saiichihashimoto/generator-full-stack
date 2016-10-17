@@ -14,9 +14,9 @@ export default class GitHubRepoGenerator extends BaseGenerator {
 	constructor(...args) {
 		super(...args);
 
-		this.option('description', { type: String });
-		this.option('name', { type: String });
 		this.option('user', { type: String });
+		this.option('name', { type: String });
+		this.option('description', { type: String });
 	}
 	configuring() {
 		return github.repos.create({

@@ -1,9 +1,10 @@
 {
   "scripts": {
-    "build": "run-s build:*",
+    "build": "echo no builds",
     "prerelease": "semantic-release pre && npm run build",
-    "release": "run-s release:*",
-    "postrelease": "semantic-release post"
+    "release": "echo no releases",
+    "postrelease": "semantic-release post",
+    "test": "echo no tests"
   },
   "config": {
     "commitizen": {

@@ -9,7 +9,6 @@ export default class CIGenerator extends BaseGenerator {
 		this.npmInstall(
 			[
 				'cz-conventional-changelog',
-				'npm-run-all',
 				'semantic-release',
 				'validate-commit-msg',
 			],
