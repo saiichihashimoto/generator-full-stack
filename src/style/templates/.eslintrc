@@ -20,7 +20,6 @@
     ],
     "babel/object-curly-spacing": 0,
     "babel/object-shorthand": 0,
-    "camelcase": 0,
     "comma-dangle": [
       2,
       "always-multiline"
