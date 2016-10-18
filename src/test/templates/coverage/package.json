@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "test:unit": "istanbul cover -x *.test.js _mocha -- -R spec \"./{,!(node_modules)/**/}*.test.js\""
+  }
+}
