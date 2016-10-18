@@ -1,6 +1,6 @@
 {
   "scripts": {
     "test": "run-s test:*",
-    "test:unit": "istanbul cover -x *.test.js _mocha -- -R spec \"./{,!(node_modules)/**/}*.test.js\""
+    "test:unit": "mocha -R spec \"./{,!(node_modules)/**/}*.test.js\""
   }
 }
