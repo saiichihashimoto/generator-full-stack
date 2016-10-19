@@ -3,6 +3,7 @@ import { BaseGenerator } from '../base';
 export default class StyleGenerator extends BaseGenerator {
 	configuring() {
 		this.fs.copy(this.templatePath('.eslintrc'), this.destinationPath('.eslintrc'));
+		this.fs.copy(this.templatePath('.stylelintrc'), this.destinationPath('.stylelintrc'));
 		this.npmInstall(
 			[
 				'babel-eslint',
@@ -10,6 +11,9 @@ export default class StyleGenerator extends BaseGenerator {
 				'eslint-config-xo',
 				'eslint-plugin-babel',
 				'eslint-plugin-react',
+				'stylefmt',
+				'stylelint',
+				'stylelint-config-standard',
 			],
 			{ saveDev: true }
 		);
