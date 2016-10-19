@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "node": "babel-node .",
+    "nodemon": "nodemon --exec babel-node --ignore dist/ --ext js,jsx,css -- .",
+    "start": "if [ \"$NODE_ENV\" = 'production' ]; then foreman start; else foreman start --procfile Procfile.dev; fi"
+  }
+}
