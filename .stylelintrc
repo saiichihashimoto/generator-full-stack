@@ -1,6 +1,19 @@
 {
   "extends": "stylelint-config-standard",
   "rules": {
+    "at-rule-empty-line-before": [
+      "always",
+      {
+        "except": [
+          "all-nested",
+          "blockless-after-same-name-blockless",
+          "blockless-group"
+        ],
+        "ignore": [
+          "all-nested"
+        ]
+      }
+    ],
     "at-rule-name-space-after": "always",
     "block-opening-brace-space-before": "always",
     "color-hex-case": null,
@@ -13,6 +26,12 @@
       ],
       {
         "severity": "warning"
+      }
+    ],
+    "declaration-block-no-duplicate-properties": [
+      true,
+      {
+        "ignoreProperties": "composes"
       }
     ],
     "declaration-block-no-ignored-properties": [
