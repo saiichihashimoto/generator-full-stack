@@ -5,6 +5,7 @@ export default class HerokuGenerator extends BaseGenerator {
 		super(...args);
 
 		this.option('name', { type: String });
+		this.option('pipeline', { defaults: true, type: Boolean });
 	}
 	writing() {
 		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json')));
@@ -13,6 +14,6 @@ export default class HerokuGenerator extends BaseGenerator {
 		return this._spawn('heroku', ['version'])
 			.catch(() => this._spawn('brew', ['install', 'heroku']))
 			.then(() => this._spawn('heroku', ['apps:create', this.options.name]))
-			.then(() => this._spawn('heroku', ['pipelines:create', this.options.name, '--app', this.options.name, '--stage', 'production']));
+			.then(() => this.options.pipeline && this._spawn('heroku', ['pipelines:create', this.options.name, '--app', this.options.name, '--stage', 'production']));
 	}
 }
