@@ -6,6 +6,9 @@ export default class HerokuGenerator extends BaseGenerator {
 
 		this.option('name', { type: String });
 	}
+	writing() {
+		this.fs.extendJSON(this.destinationPath('package.json'), this.fs.readJSON(this.templatePath('package.json')));
+	}
 	end() {
 		return this._spawn('heroku', ['version'])
 			.catch(() => this._spawn('brew', ['install', 'heroku']))
