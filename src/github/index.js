@@ -17,6 +17,7 @@ export default class GitHubGenerator extends BaseGenerator {
 		this.option('user', { type: String });
 		this.option('name', { type: String });
 		this.option('description', { type: String });
+		this.option('labels', { defaults: true, type: Boolean });
 	}
 	configuring() {
 		return github.repos.create({
@@ -51,32 +52,34 @@ export default class GitHubGenerator extends BaseGenerator {
 	end() {
 		return Promise.all([
 			this._spawn('git', ['push']),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: '5ebeff', name: 'optimization' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: '91ca55', name: 'new feature' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'cc317c', name: 'discussion' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'cc317c', name: 'idea' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'd2dae1', name: 'wont fix' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ee3f46', name: 'breaks experience' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ee3f46', name: 'edge case' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ee3f46', name: 'regression' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fbca04', name: 'greenkeeper' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fbca04', name: 'requires investigation' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fbca04', name: 'watchlist' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fef2c0', name: 'chore' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fef2c0', name: 'development' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fef2c0', name: 'legal' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fef2c0', name: 'market research' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fef2c0', name: 'refactor' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ffc274', name: 'copy' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ffc274', name: 'design' }),
-			github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ffc274', name: 'user experience' }),
-			github.issues.deleteLabel({ user: this.options.user, repo: this.options.name, name: 'help wanted' }),
-			github.issues.deleteLabel({ user: this.options.user, repo: this.options.name, name: 'wontfix' }),
-			github.issues.updateLabel({ user: this.options.user, repo: this.options.name, color: '5ebeff', name: 'enhancement', oldname: 'enhancement' }),
-			github.issues.updateLabel({ user: this.options.user, repo: this.options.name, color: 'cc317c', name: 'question', oldname: 'question' }),
-			github.issues.updateLabel({ user: this.options.user, repo: this.options.name, color: 'd2dae1', name: 'duplicate', oldname: 'duplicate' }),
-			github.issues.updateLabel({ user: this.options.user, repo: this.options.name, color: 'd2dae1', name: 'invalid', oldname: 'invalid' }),
-			github.issues.updateLabel({ user: this.options.user, repo: this.options.name, color: 'ee3f46', name: 'bug', oldname: 'bug' }),
+			this.options.labels && Promise.all([
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: '5ebeff', name: 'optimization' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: '91ca55', name: 'new feature' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'cc317c', name: 'discussion' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'cc317c', name: 'idea' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'd2dae1', name: 'wont fix' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ee3f46', name: 'breaks experience' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ee3f46', name: 'edge case' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ee3f46', name: 'regression' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fbca04', name: 'greenkeeper' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fbca04', name: 'requires investigation' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fbca04', name: 'watchlist' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fef2c0', name: 'chore' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fef2c0', name: 'development' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fef2c0', name: 'legal' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fef2c0', name: 'market research' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'fef2c0', name: 'refactor' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ffc274', name: 'copy' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ffc274', name: 'design' }),
+				github.issues.createLabel({ user: this.options.user, repo: this.options.name, color: 'ffc274', name: 'user experience' }),
+				github.issues.deleteLabel({ user: this.options.user, repo: this.options.name, name: 'help wanted' }),
+				github.issues.deleteLabel({ user: this.options.user, repo: this.options.name, name: 'wontfix' }),
+				github.issues.updateLabel({ user: this.options.user, repo: this.options.name, color: '5ebeff', name: 'enhancement', oldname: 'enhancement' }),
+				github.issues.updateLabel({ user: this.options.user, repo: this.options.name, color: 'cc317c', name: 'question', oldname: 'question' }),
+				github.issues.updateLabel({ user: this.options.user, repo: this.options.name, color: 'd2dae1', name: 'duplicate', oldname: 'duplicate' }),
+				github.issues.updateLabel({ user: this.options.user, repo: this.options.name, color: 'd2dae1', name: 'invalid', oldname: 'invalid' }),
+				github.issues.updateLabel({ user: this.options.user, repo: this.options.name, color: 'ee3f46', name: 'bug', oldname: 'bug' }),
+			]),
 		]);
 	}
 }

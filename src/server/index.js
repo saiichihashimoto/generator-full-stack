@@ -1,8 +1,15 @@
 import { BaseGenerator } from '../base';
 
 export default class ServerGenerator extends BaseGenerator {
+	constructor(...args) {
+		super(...args);
+
+		this.option('heroku', { defaults: true, type: Boolean });
+	}
 	initializing() {
-		this.composeWith('full-stack:heroku', { options: this._passableOptions('heroku') });
+		if (this.options.heroku) {
+			this.composeWith('full-stack:heroku', { options: this._passableOptions('heroku') });
+		}
 	}
 	configuring() {
 		this.fs.copy(this.templatePath('.babelrc'), this.destinationPath('.babelrc'));
