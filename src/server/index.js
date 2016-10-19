@@ -1,6 +1,9 @@
 import { BaseGenerator } from '../base';
 
 export default class ServerGenerator extends BaseGenerator {
+	initializing() {
+		this.composeWith('full-stack:heroku', { options: this._passableOptions('heroku') });
+	}
 	configuring() {
 		this.fs.copy(this.templatePath('.babelrc'), this.destinationPath('.babelrc'));
 		this.fs.copy(this.templatePath('Procfile'), this.destinationPath('Procfile'));
