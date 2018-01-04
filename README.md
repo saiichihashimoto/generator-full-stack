@@ -1,4 +1,6 @@
 # generator-full-stack
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/saiichihashimoto/generator-full-stack.svg)](https://greenkeeper.io/)
 [![Travis](https://img.shields.io/travis/saiichihashimoto/generator-full-stack/master.svg?style=flat-square&maxAge=86400)](https://travis-ci.org/saiichihashimoto/generator-full-stack)
 
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
